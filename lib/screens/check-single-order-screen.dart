@@ -18,7 +18,7 @@ class CheckSingleOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
         title: Text('Order'),
       ),
       body: Column(

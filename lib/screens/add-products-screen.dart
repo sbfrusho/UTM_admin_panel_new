@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:admin_panel/models/product-model.dart';
 import 'package:admin_panel/utils/constant.dart';
+import 'package:admin_panel/widgets/drawer-widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -36,8 +37,10 @@ class AddProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Products"),
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
+        
       ),
+      drawer: DrawerWidget(),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -97,10 +100,10 @@ class AddProductScreen extends StatelessWidget {
                                       },
                                       child: CircleAvatar(
                                         backgroundColor:
-                                            AppConstant.appScendoryColor,
+                                            AppConstant.colorYellow,
                                         child: Icon(
                                           Icons.close,
-                                          color: AppConstant.appTextColor,
+                                          color: AppConstant.colorWhite,
                                         ),
                                       ),
                                     ),
@@ -131,7 +134,7 @@ class AddProductScreen extends StatelessWidget {
                           Text("Is Sale"),
                           Switch(
                             value: isSaleController.isSale.value,
-                            activeColor: AppConstant.appMainColor,
+                            activeColor: AppConstant.colorBlue,
                             onChanged: (value) {
                               isSaleController.toggleIsSale(value);
                             },
@@ -148,7 +151,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.appMainColor,
+                  cursorColor: AppConstant.colorWhite,
                   textInputAction: TextInputAction.next,
                   controller: productNameController,
                   decoration: InputDecoration(
@@ -173,7 +176,7 @@ class AddProductScreen extends StatelessWidget {
                         height: 65,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
                         child: TextFormField(
-                          cursorColor: AppConstant.appMainColor,
+                          cursorColor: AppConstant.colorBlue,
                           textInputAction: TextInputAction.next,
                           controller: salePriceController,
                           decoration: InputDecoration(
@@ -198,7 +201,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.appMainColor,
+                  cursorColor: AppConstant.colorBlue,
                   textInputAction: TextInputAction.next,
                   controller: fullPriceController,
                   decoration: InputDecoration(
@@ -221,7 +224,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.appMainColor,
+                  cursorColor: AppConstant.colorBlue,
                   textInputAction: TextInputAction.next,
                   controller: deliveryTimeController,
                   decoration: InputDecoration(
@@ -244,7 +247,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.appMainColor,
+                  cursorColor: AppConstant.colorBlue,
                   textInputAction: TextInputAction.next,
                   controller: productDescriptionController,
                   decoration: InputDecoration(

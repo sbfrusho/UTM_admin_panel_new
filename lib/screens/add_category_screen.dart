@@ -29,7 +29,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Categories"),
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -90,10 +90,10 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                                       },
                                       child: const CircleAvatar(
                                         backgroundColor:
-                                            AppConstant.appScendoryColor,
+                                            AppConstant.colorYellow,
                                         child: Icon(
                                           Icons.close,
-                                          color: AppConstant.appTextColor,
+                                          color: AppConstant.colorWhite,
                                         ),
                                       ),
                                     ),
@@ -112,7 +112,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                 height: 65,
                 margin: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.appMainColor,
+                  cursorColor: AppConstant.colorBlue,
                   textInputAction: TextInputAction.next,
                   controller: categoryNameController,
                   decoration: const InputDecoration(

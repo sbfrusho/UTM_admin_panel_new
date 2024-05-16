@@ -20,7 +20,7 @@ class AllCategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
         title: const Text("All Categories"),
         actions: [
           InkWell(
@@ -119,7 +119,7 @@ class AllCategoriesScreen extends StatelessWidget {
                     child: ListTile(
                       onTap: () {},
                       leading: CircleAvatar(
-                        backgroundColor: AppConstant.appScendoryColor,
+                        backgroundColor: AppConstant.colorYellow,
                         backgroundImage: CachedNetworkImageProvider(
                           categoriesModel.categoryImg.toString(),
                           errorListener: (err) {

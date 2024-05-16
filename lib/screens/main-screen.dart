@@ -11,7 +11,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
         title: const Text("Admin Panel"),
       ),
       drawer: DrawerWidget(),

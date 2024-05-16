@@ -22,7 +22,7 @@ class SpecificCustomerOrderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
         title: Text(customerName),
       ),
       body: FutureBuilder(
@@ -96,7 +96,7 @@ class SpecificCustomerOrderScreen extends StatelessWidget {
                       ),
                     ),
                     leading: CircleAvatar(
-                      backgroundColor: AppConstant.appScendoryColor,
+                      backgroundColor: AppConstant.colorBlue,
                       child: Text(orderModel.customerName[0]),
                     ),
                     title: Text(data['customerName']),

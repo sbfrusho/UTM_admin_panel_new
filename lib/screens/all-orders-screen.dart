@@ -15,7 +15,7 @@ class AllOrdersScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("All Orders"),
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
       ),
       body: FutureBuilder(
         future: FirebaseFirestore.instance
@@ -64,7 +64,7 @@ class AllOrdersScreen extends StatelessWidget {
                       ),
                     ),
                     leading: CircleAvatar(
-                      backgroundColor: AppConstant.appScendoryColor,
+                      backgroundColor: AppConstant.colorYellow,
                       child: Text(data['customerName'][0]),
                     ),
                     title: Text(data['customerName']),

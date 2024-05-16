@@ -22,6 +22,7 @@ class DrawerWidget extends StatefulWidget {
 
 class _DrawerWidgetState extends State<DrawerWidget> {
   User? user = FirebaseAuth.instance.currentUser;
+  AppConstant constant = AppConstant();
   // final GoogleSignIn _googleSignIn = GoogleSignIn();
   // final GoogleSignInController googleSignInController =
   //     Get.put(GoogleSignInController());
@@ -76,7 +77,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       titleAlignment: ListTileTitleAlignment.center,
                       title: Text(
                         userName.toString(),
-                        style: TextStyle(color: AppConstant.appTextColor),
+                        style: TextStyle(color: AppConstant.colorWhite),
                       ),
                       subtitle: Text(
                         AppConstant.appVersion,
@@ -84,10 +85,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       ),
                       leading: CircleAvatar(
                         radius: 22.0,
-                        backgroundColor: AppConstant.appMainColor,
+                        backgroundColor: AppConstant.colorBlue,
                         child: Text(
                           firstLetter,
-                          style: TextStyle(color: AppConstant.appTextColor),
+                          style: TextStyle(color: AppConstant.colorWhite),
                         ),
                       ),
                     ),
@@ -99,7 +100,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       titleAlignment: ListTileTitleAlignment.center,
                       title: Text(
                         "Guest",
-                        style: TextStyle(color: AppConstant.appTextColor),
+                        style: TextStyle(color: AppConstant.colorWhite),
                       ),
                       subtitle: Text(
                         AppConstant.appVersion,
@@ -107,10 +108,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       ),
                       leading: CircleAvatar(
                         radius: 22.0,
-                        backgroundColor: AppConstant.appMainColor,
+                        backgroundColor: AppConstant.colorBlue,
                         child: Text(
                           "G",
-                          style: TextStyle(color: AppConstant.appTextColor),
+                          style: TextStyle(color: AppConstant.colorWhite),
                         ),
                       ),
                     ),
@@ -268,7 +269,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ],
         ),
         width: Get.width - 80.0,
-        backgroundColor: AppConstant.appScendoryColor,
+        backgroundColor: AppConstant.colorBlue,
         // backgroundColor: Colors.grey.shade900,
       ),
     );

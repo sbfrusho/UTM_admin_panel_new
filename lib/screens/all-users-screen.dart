@@ -28,7 +28,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
           return Text(
               'Users (${_getUserLengthController.userCollectionLength.toString()})');
         }),
-        backgroundColor: AppConstant.appMainColor,
+        backgroundColor: AppConstant.colorBlue,
       ),
       body: FutureBuilder(
         future: FirebaseFirestore.instance
@@ -92,7 +92,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                     // ),
 
                     leading: CircleAvatar(
-                      backgroundColor: AppConstant.appScendoryColor,
+                      backgroundColor: AppConstant.colorYellow,
                       backgroundImage: CachedNetworkImageProvider(
                         userModel.userImg,
                         errorListener: (err) {
