@@ -138,22 +138,22 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: ListTile(
-                onTap: () {
-                  Get.to(() => AllUsersScreen());
-                },
-                title: Text(
-                  'Users',
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            //   child: ListTile(
+            //     onTap: () {
+            //       // Get.to(() => AllUsersScreen());
+            //     },
+            //     title: Text(
+            //       'Users',
+            //       style: TextStyle(color: Colors.white),
+            //     ),
+            //     leading: Icon(
+            //       Icons.person,
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
@@ -207,24 +207,24 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
             ),
             if (user != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: ListTile(
-                  titleAlignment: ListTileTitleAlignment.center,
-                  onTap: () {
-                    // Get.back();
-                    // Get.to(() => CustomerReviews());
-                  },
-                  title: Text(
-                    'Customer Reviews',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  leading: Icon(
-                    Icons.reviews_rounded,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              //   child: ListTile(
+              //     titleAlignment: ListTileTitleAlignment.center,
+              //     onTap: () {
+              //       // Get.back();
+              //       // Get.to(() => CustomerReviews());
+              //     },
+              //     title: Text(
+              //       'Customer Reviews',
+              //       style: TextStyle(color: Colors.white),
+              //     ),
+              //     leading: Icon(
+              //       Icons.reviews_rounded,
+              //       color: Colors.white,
+              //     ),
+              //   ),
+              // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
