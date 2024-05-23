@@ -37,7 +37,7 @@ class AddProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Products"),
-        backgroundColor: AppConstant.colorBlue,
+        backgroundColor: AppConstant.colorRed,
         
       ),
       drawer: DrawerWidget(),
@@ -100,7 +100,7 @@ class AddProductScreen extends StatelessWidget {
                                       },
                                       child: CircleAvatar(
                                         backgroundColor:
-                                            AppConstant.colorYellow,
+                                            AppConstant.colorRed,
                                         child: Icon(
                                           Icons.close,
                                           color: AppConstant.colorWhite,
@@ -134,7 +134,7 @@ class AddProductScreen extends StatelessWidget {
                           Text("Is Sale"),
                           Switch(
                             value: isSaleController.isSale.value,
-                            activeColor: AppConstant.colorBlue,
+                            activeColor: AppConstant.colorRed,
                             onChanged: (value) {
                               isSaleController.toggleIsSale(value);
                             },
@@ -176,7 +176,7 @@ class AddProductScreen extends StatelessWidget {
                         height: 65,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
                         child: TextFormField(
-                          cursorColor: AppConstant.colorBlue,
+                          cursorColor: AppConstant.colorRed,
                           textInputAction: TextInputAction.next,
                           controller: salePriceController,
                           decoration: InputDecoration(
@@ -201,7 +201,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.colorBlue,
+                  cursorColor: AppConstant.colorRed,
                   textInputAction: TextInputAction.next,
                   controller: fullPriceController,
                   decoration: InputDecoration(
@@ -224,7 +224,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.colorBlue,
+                  cursorColor: AppConstant.colorRed,
                   textInputAction: TextInputAction.next,
                   controller: deliveryTimeController,
                   decoration: InputDecoration(
@@ -247,7 +247,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  cursorColor: AppConstant.colorBlue,
+                  cursorColor: AppConstant.colorRed,
                   textInputAction: TextInputAction.next,
                   controller: productDescriptionController,
                   decoration: InputDecoration(

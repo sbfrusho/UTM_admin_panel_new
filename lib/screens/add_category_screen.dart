@@ -29,7 +29,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Categories"),
-        backgroundColor: AppConstant.colorBlue,
+        backgroundColor: AppConstant.colorRed,
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -90,7 +90,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                                       },
                                       child: const CircleAvatar(
                                         backgroundColor:
-                                            AppConstant.colorYellow,
+                                            AppConstant.colorRed,
                                         child: Icon(
                                           Icons.close,
                                           color: AppConstant.colorWhite,

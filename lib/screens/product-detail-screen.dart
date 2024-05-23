@@ -16,7 +16,7 @@ class SingleProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstant.colorBlue,
+        backgroundColor: AppConstant.colorRed,
         title: Text(productModel.productName),
       ),
       body: Container(

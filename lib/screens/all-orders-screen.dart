@@ -15,7 +15,7 @@ class AllOrdersScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("All Orders"),
-        backgroundColor: AppConstant.colorBlue,
+        backgroundColor: AppConstant.colorRed,
       ),
       body: FutureBuilder(
         future: FirebaseFirestore.instance
@@ -56,15 +56,15 @@ class AllOrdersScreen extends StatelessWidget {
                 return Card(
                   elevation: 5,
                   child: ListTile(
-                    // onTap: () => Get.to(
-                    //   () => SpecificCustomerOrderScreen(
-                    //     docId: snapshot.data!.docs[index]['customerId'],
-                    //     customerName: snapshot.data!.docs[index]
-                    //         ['customerName'],
-                    //   ),
-                    // ),
+                    onTap: () => Get.to(
+                      () => SpecificCustomerOrderScreen(
+                        docId: snapshot.data!.docs[index]['customerId'],
+                        customerName: snapshot.data!.docs[index]
+                            ['customerName'],
+                      ),
+                    ),
                     leading: CircleAvatar(
-                      backgroundColor: AppConstant.colorYellow,
+                      backgroundColor: AppConstant.colorRed,
                       child: Text(data['customerName'][0]),
                     ),
                     title: Text(data['customerName']),

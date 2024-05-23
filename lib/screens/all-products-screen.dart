@@ -38,7 +38,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
             ),
           )
         ],
-        backgroundColor: AppConstant.colorBlue,
+        backgroundColor: AppConstant.colorRed,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -137,7 +137,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
                             productModel: productModel));
                       },
                       leading: CircleAvatar(
-                        backgroundColor: AppConstant.colorYellow,
+                        backgroundColor: AppConstant.colorRed,
                         backgroundImage: CachedNetworkImageProvider(
                           productModel.productImages[0],
                           errorListener: (err) {

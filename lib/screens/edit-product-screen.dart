@@ -48,7 +48,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppConstant.colorBlue,
+            backgroundColor: AppConstant.colorRed,
             title: Text("Edit Product ${widget.productModel.productName}"),
           ),
           body: SingleChildScrollView(
@@ -96,7 +96,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                   },
                                   child: CircleAvatar(
                                     backgroundColor:
-                                        AppConstant.colorViolet,
+                                        AppConstant.colorRed,
                                     child: Icon(
                                       Icons.close,
                                       color: AppConstant.colorWhite,
@@ -183,7 +183,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               Text("Is Sale"),
                               Switch(
                                 value: isSaleController.isSale.value,
-                                activeColor: AppConstant.colorBlue,
+                                activeColor: AppConstant.colorRed,
                                 onChanged: (value) {
                                   isSaleController.toggleIsSale(value);
                                 },
@@ -201,7 +201,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     height: 65,
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextFormField(
-                      cursorColor: AppConstant.colorBlue,
+                      cursorColor: AppConstant.colorRed,
                       textInputAction: TextInputAction.next,
                       controller: productNameController,
                       decoration: InputDecoration(
@@ -227,7 +227,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               height: 65,
                               margin: EdgeInsets.symmetric(horizontal: 10.0),
                               child: TextFormField(
-                                cursorColor: AppConstant.colorBlue,
+                                cursorColor: AppConstant.colorRed,
                                 textInputAction: TextInputAction.next,
                                 controller: salePriceController,
                                 decoration: InputDecoration(
@@ -280,7 +280,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     height: 65,
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextFormField(
-                      cursorColor: AppConstant.colorBlue,
+                      cursorColor: AppConstant.colorRed,
                       textInputAction: TextInputAction.next,
                       controller: fullPriceController,
                       decoration: InputDecoration(
@@ -303,7 +303,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     height: 65,
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextFormField(
-                      cursorColor: AppConstant.colorBlue,
+                      cursorColor: AppConstant.colorRed,
                       textInputAction: TextInputAction.next,
                       controller: deliveryTimeController,
                       decoration: InputDecoration(
@@ -326,7 +326,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     height: 65,
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
                     child: TextFormField(
-                      cursorColor: AppConstant.colorBlue,
+                      cursorColor: AppConstant.colorRed,
                       textInputAction: TextInputAction.next,
                       controller: productDescriptionController,
                       decoration: InputDecoration(
