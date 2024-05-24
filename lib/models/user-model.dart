@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
   final String uId;
@@ -12,7 +12,7 @@ class UserModel {
   final String street;
   final bool isAdmin;
   final bool isActive;
-  final dynamic createdOn;
+  final Timestamp createdOn; // updated field
 
   UserModel({
     required this.uId,
@@ -43,7 +43,7 @@ class UserModel {
       'street': street,
       'isAdmin': isAdmin,
       'isActive': isActive,
-      'createdOn': createdOn,
+      'createdOn': createdOn, // serialize new field
     };
   }
 
@@ -61,7 +61,7 @@ class UserModel {
       street: json['street'],
       isAdmin: json['isAdmin'],
       isActive: json['isActive'],
-      createdOn: json['createdOn'].toString(),
+      createdOn: json['createdOn'], // deserialize new field
     );
   }
 }
