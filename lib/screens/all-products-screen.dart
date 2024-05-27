@@ -38,7 +38,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
             ),
           )
         ],
-        backgroundColor: AppConstant.colorRed,
+        backgroundColor: Colors.red,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance

@@ -130,7 +130,7 @@ class AdminScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Admin Panel'),
-        backgroundColor: Colors.blue, // Choose your preferred color
+        backgroundColor: Colors.red, // Choose your preferred color
       ),
       drawer: DrawerAdminWidget(),
       body: Column(
@@ -143,16 +143,17 @@ class AdminScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'Products',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.all(16),
+                  //   child: Text(
+                  //     'Products',
+                  //     style: TextStyle(
+                  //       fontSize: 20,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  Divider(color: Colors.black,),
                   Expanded(
                     child: AllProductsScreen(),
                   ),
@@ -167,16 +168,16 @@ class AdminScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'Users',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.all(16),
+                  //   child: Text(
+                  //     'Users',
+                  //     style: TextStyle(
+                  //       fontSize: 20,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
                   Expanded(
                     child: AllUsersScreen(),
                   ),

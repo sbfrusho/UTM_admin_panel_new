@@ -9,6 +9,7 @@ class AllUsersScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('All Users'),
+        backgroundColor: Colors.red,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('users').snapshots(),

@@ -302,6 +302,12 @@ class AddProductScreen extends StatelessWidget {
                         .collection('products')
                         .doc(productId)
                         .set(productModel.toMap());
+
+                    productNameController.clear();
+                    salePriceController.clear();
+                    fullPriceController.clear();
+                    deliveryTimeController.clear();
+                    productDescriptionController.clear();
                     EasyLoading.dismiss();
                   } catch (e) {
                     print("error : $e");

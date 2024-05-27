@@ -1,4 +1,5 @@
 // ignore_for_file: file_names, sort_child_properties_last, prefer_const_constructors, unused_local_variable, must_be_immutable, avoid_print, unnecessary_string_interpolations, deprecated_member_use, unused_element, unnecessary_null_comparison
+import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,8 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
   // final GoogleSignInController googleSignInController =
   //     Get.put(GoogleSignInController());
 
-  String userName = 'User';
-  String firstLetter = 'U';
+  String userName = 'Admin';
+  String firstLetter = 'Nabil';
 
   // Future<dynamic> getUserData() async {
   //   if (user != null) {
@@ -85,7 +86,7 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
                       ),
                       leading: CircleAvatar(
                         radius: 22.0,
-                        backgroundColor: AppConstant.colorBlue,
+                        backgroundColor: AppConstant.colorRed,
                         child: Text(
                           firstLetter,
                           style: TextStyle(color: AppConstant.colorWhite),
@@ -108,7 +109,7 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
                       ),
                       leading: CircleAvatar(
                         radius: 22.0,
-                        backgroundColor: AppConstant.colorBlue,
+                        backgroundColor: AppConstant.colorRed,
                         child: Text(
                           "G",
                           style: TextStyle(color: AppConstant.colorWhite),
@@ -126,7 +127,7 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
                 onTap: () {
-                  Get.offAll(() => MainScreen());
+                  Get.offAll(() => AdminScreen());
                 },
                 title: Text(
                   'Home',
@@ -228,33 +229,17 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
-                onTap: () {
-                  // Get.to(() => ContactScreen());
-                },
-                title: Text(
-                  'Contact',
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: Icon(
-                  Icons.phone,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: ListTile(
                 onTap: () async {
-                  // if (user != null) {
-                  //   EasyLoading.show();
-                  //   await FirebaseAuth.instance.signOut();
-                  //   await _googleSignIn.signOut();
-                  //   Get.offAll(() => MainScreen());
-                  //   EasyLoading.dismiss();
-                  // } else {
-                  //   Get.back();
-                  //   await googleSignInController.signInWithGoogle();
-                  // }
+                  if (user != null) {
+                    EasyLoading.show();
+                    await FirebaseAuth.instance.signOut();
+                    // await _googleSignIn.signOut();
+                    Get.offAll(() => MainScreen());
+                    EasyLoading.dismiss();
+                  } else {
+                    Get.back();
+                    // await googleSignInController.signInWithGoogle();
+                  }
                 },
                 title: Text(
                   user != null ? 'Logout' : 'Login',
@@ -269,25 +254,12 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
           ],
         ),
         width: Get.width - 80.0,
-        backgroundColor: AppConstant.colorBlue,
+        backgroundColor: const Color.fromARGB(255, 193, 77, 77),
         // backgroundColor: Colors.grey.shade900,
       ),
     );
   }
 
   // send whatsapp message
-  // static Future<void> sendMessage() async {
-  //   final phoneNumber = AppConstant.whatsAppNumber;
-  //   final message =
-  //       "Hello *${AppConstant.appMainName}*"; // Replace with your message
-
-  //   final url =
-  //       'https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}';
-
-  //   if (await canLaunch(url)) {
-  //     await launch(url);
-  //   } else {
-  //     throw 'Could not launch $url';
-  //   }
-  // }
+  
 }
