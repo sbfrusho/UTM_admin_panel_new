@@ -1,19 +1,16 @@
 import 'package:admin_panel/const/app-colors.dart';
-import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';// Make sure to import the UserDetailScreen
+import 'package:firebase_auth/firebase_auth.dart';// Make sure to import the UserDetailScreen
 
-class AllUsersScreen extends StatelessWidget {
+class ManageUsers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('All Users' , style: TextStyle(color: Colors.white),),
         backgroundColor: AppColor().colorRed,
-        leading: IconButton(icon: Icon(Icons.arrow_back),onPressed: ()=> Get.offAll(AdminScreen()),),
       ),
       body: Container(
         color: AppColor().backgroundColor,
@@ -40,7 +37,7 @@ class AllUsersScreen extends StatelessWidget {
                   userId: users[index].id,
                   name: user['name'],
                   email: user['email'],
-                  // onDelete: () => _deleteUser(context, users[index].id, user['email']),
+                  onDelete: () => _deleteUser(context, users[index].id, user['email']),
                 );
               },
             );
@@ -85,13 +82,13 @@ class UserCard extends StatelessWidget {
   final String userId;
   final String name;
   final String email;
-  // final VoidCallback onDelete;
+  final VoidCallback onDelete;
 
   const UserCard({
     required this.userId,
     required this.name,
     required this.email,
-    // required this.onDelete,
+    required this.onDelete,
   });
 
   @override
@@ -110,10 +107,10 @@ class UserCard extends StatelessWidget {
         child: ListTile(
           title: Text(name),
           subtitle: Text(email),
-          // trailing: IconButton(
-          //   icon: Icon(Icons.delete),
-          //   onPressed: onDelete,
-          // ),
+          trailing: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: onDelete,
+          ),
         ),
       ),
     );

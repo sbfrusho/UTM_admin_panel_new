@@ -1,6 +1,8 @@
 // ignore_for_file: file_names, sort_child_properties_last, prefer_const_constructors, unused_local_variable, must_be_immutable, avoid_print, unnecessary_string_interpolations, deprecated_member_use, unused_element, unnecessary_null_comparison
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
+import 'package:admin_panel/screens/manage-users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -143,6 +145,22 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
                 onTap: () {
+                  Get.offAll(() => ManageUsers());
+                },
+                title: Text(
+                  'Manage Account',
+                  style: TextStyle(color: Colors.white),
+                ),
+                leading: Icon(
+                  Icons.home_outlined,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: ListTile(
+                onTap: () {
                   Get.to(() => AllUsersScreen());
                 },
                 title: Text(
@@ -254,7 +272,7 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
           ],
         ),
         width: Get.width - 80.0,
-        backgroundColor: const Color.fromARGB(255, 193, 77, 77),
+        backgroundColor: AppColor().colorRed,
         // backgroundColor: Colors.grey.shade900,
       ),
     );
