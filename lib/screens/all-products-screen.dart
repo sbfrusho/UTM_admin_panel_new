@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, avoid_print
 
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/models/product-model.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,7 +29,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("All Products"),
+        title: Text("All Products" , style: TextStyle(color: Colors.white),),
         actions: [
           GestureDetector(
             onTap: () => Get.to(() => AddProductScreen()),
@@ -38,7 +39,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
             ),
           )
         ],
-        backgroundColor: Colors.red,
+        backgroundColor: AppColor().colorRed,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -89,6 +90,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
                   productDescription: data['productDescription'],
                   createdAt: data['createdAt'],
                   updatedAt: data['updatedAt'],
+                  quantity: data['quantity']
                 );
 
                 return SwipeActionCell(

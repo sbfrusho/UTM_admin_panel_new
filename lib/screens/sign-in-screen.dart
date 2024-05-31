@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/main-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,7 +29,8 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
+        backgroundColor: AppColor().colorRed,
+        title: Text('Sign In' , style: TextStyle(color: Colors.white),),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -34,25 +38,29 @@ class _SignInScreenState extends State<SignInScreen> {
           },
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _signIn,
-              child: Text('Sign In'),
-            ),
-          ],
+      body: Container(
+        color: AppColor().backgroundColor,
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: ListView(
+            children: [
+              Image.asset('assets/image 1.png'),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+              ),
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _signIn,
+                child: Text('Sign In'),
+              ),
+            ],
+          ),
         ),
       ),
     );

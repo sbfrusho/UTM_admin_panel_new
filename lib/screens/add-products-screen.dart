@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:admin_panel/models/product-model.dart';
+import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,16 +32,19 @@ class AddProductScreen extends StatelessWidget {
   TextEditingController fullPriceController = TextEditingController();
   TextEditingController deliveryTimeController = TextEditingController();
   TextEditingController productDescriptionController = TextEditingController();
-
+  TextEditingController quantityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Products"),
         backgroundColor: AppConstant.colorRed,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: ()=>Get.offAll(AdminScreen()),
+        ),
         
       ),
-      drawer: DrawerWidget(),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -264,6 +268,28 @@ class AddProductScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 10.0),
+              Container(
+                height: 65,
+                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                child: TextFormField(
+                  cursorColor: AppConstant.colorRed,
+                  textInputAction: TextInputAction.next,
+                  controller: quantityController,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                    ),
+                    hintText: "Quantity",
+                    hintStyle: TextStyle(fontSize: 12.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
               ElevatedButton(
                 onPressed: () async {
@@ -296,6 +322,7 @@ class AddProductScreen extends StatelessWidget {
                           productDescriptionController.text.trim(),
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
+                      quantity: quantityController.text.trim(),
                     );
 
                     await FirebaseFirestore.instance

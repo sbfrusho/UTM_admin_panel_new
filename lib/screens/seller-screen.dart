@@ -91,6 +91,7 @@ class _SellerScreenState extends State<SellerScreen> {
                   productDescription: data['productDescription'],
                   createdAt: data['createdAt'],
                   updatedAt: data['updatedAt'],
+                  quantity: data['quantity'],
                 );
 
                 return SwipeActionCell(

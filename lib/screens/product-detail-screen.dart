@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, file_names, must_be_immutable, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
 
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/models/product-model.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,8 @@ class SingleProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstant.colorRed,
-        title: Text(productModel.productName),
+        backgroundColor: AppColor().colorRed,
+        title: Text(productModel.productName , style: TextStyle(color: Colors.white),),
       ),
       body: Container(
         child: Column(

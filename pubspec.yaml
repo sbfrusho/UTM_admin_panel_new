@@ -60,6 +60,7 @@ dependencies:
   flutter_screenutil: ^5.9.1
   fluttertoast: ^8.2.5
   flutter_stripe: ^10.1.1
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:
@@ -84,9 +85,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets\image 1.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

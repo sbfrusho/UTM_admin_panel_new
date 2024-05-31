@@ -89,12 +89,17 @@ class SpecificCustomerOrderScreen extends StatelessWidget {
                 return Card(
                   elevation: 5,
                   child: ListTile(
-                    onTap: () => Get.to(
-                      () => CheckSingleOrderScreen(
-                        docId: snapshot.data!.docs[index].id,
-                        orderModel: orderModel,
-                      ),
-                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckSingleOrderScreen(
+                            docId: snapshot.data!.docs[index].id,
+                            orderModel: orderModel,
+                          ),
+                        ),
+                      );
+                    },
                     leading: CircleAvatar(
                       backgroundColor: AppConstant.colorRed,
                       child: Text(orderModel.customerName[0]),
@@ -104,6 +109,7 @@ class SpecificCustomerOrderScreen extends StatelessWidget {
                     trailing: InkWell(
                       onTap: () {
                         showBottomSheet(
+                          context,
                           userDocId: docId,
                           orderModel: orderModel,
                           orderDocId: orderDocId,
@@ -123,7 +129,8 @@ class SpecificCustomerOrderScreen extends StatelessWidget {
     );
   }
 
-  void showBottomSheet({
+  void showBottomSheet(
+    BuildContext context, {
     required String userDocId,
     required OrderModel orderModel,
     required String orderDocId,
@@ -148,7 +155,7 @@ class SpecificCustomerOrderScreen extends StatelessWidget {
                       await FirebaseFirestore.instance
                           .collection('orders')
                           .doc(userDocId)
-                          .collection('confirmOrders')
+                          .collection('items')
                           .doc(orderDocId)
                           .update(
                         {
@@ -162,19 +169,20 @@ class SpecificCustomerOrderScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                      onPressed: () async {
-                        await FirebaseFirestore.instance
-                            .collection('orders')
-                            .doc(userDocId)
-                            .collection('confirmOrders')
-                            .doc(orderDocId)
-                            .update(
-                          {
-                            'status': true,
-                          },
-                        );
-                      },
-                      child: Text('Delivered')),
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
+                          .collection('orders')
+                          .doc(userDocId)
+                          .collection('items')
+                          .doc(orderDocId)
+                          .update(
+                        {
+                          'status': true,
+                        },
+                      );
+                    },
+                    child: Text('Delivered'),
+                  ),
                 )
               ],
             )

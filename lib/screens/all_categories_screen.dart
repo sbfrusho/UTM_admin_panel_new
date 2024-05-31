@@ -1,12 +1,16 @@
 // ignore_for_file: avoid_unnecessary_containers
 
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/models/categories_model.dart';
+import 'package:admin_panel/screens/admin-screen.dart';
+import 'package:admin_panel/screens/edit-category.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
@@ -20,8 +24,11 @@ class AllCategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppConstant.colorRed,
-        title: const Text("All Categories"),
+        backgroundColor: AppColor().colorRed,
+        title: const Text("All Categories" , style: TextStyle(color: Colors.white),),
+        leading: IconButton(icon: Icon(Icons.arrow_back),onPressed: (){
+          Get.offAll(AdminScreen());
+        },),
         actions: [
           InkWell(
             onTap: () => Get.to(() => const AddCategoriesScreen()),
@@ -119,7 +126,7 @@ class AllCategoriesScreen extends StatelessWidget {
                     child: ListTile(
                       onTap: () {},
                       leading: CircleAvatar(
-                        backgroundColor: AppConstant.colorRed,
+                        backgroundColor: AppColor().colorRed,
                         backgroundImage: CachedNetworkImageProvider(
                           categoriesModel.categoryImg.toString(),
                           errorListener: (err) {
@@ -132,7 +139,9 @@ class AllCategoriesScreen extends StatelessWidget {
                       title: Text(categoriesModel.categoryName),
                       subtitle: Text(categoriesModel.categoryId),
                       trailing: GestureDetector(
-                          onTap: () {}, child: const Icon(Icons.edit)),
+                          onTap: () {
+                            Get.offAll(EditCategoryScreen(categoriesModel: categoriesModel));
+                          }, child: const Icon(Icons.edit)),
                     ),
                   ),
                 );

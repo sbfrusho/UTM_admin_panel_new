@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, must_be_immutable, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, unused_import
 
 import 'dart:io';
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/controllers/edit-product-controller.dart';
 import 'package:admin_panel/models/product-model.dart';
 import 'package:admin_panel/utils/constant.dart';
@@ -30,7 +31,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   TextEditingController fullPriceController = TextEditingController();
   TextEditingController deliveryTimeController = TextEditingController();
   TextEditingController productDescriptionController = TextEditingController();
-
+  TextEditingController quantityController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -48,8 +49,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppConstant.colorRed,
-            title: Text("Edit Product ${widget.productModel.productName}"),
+            backgroundColor: AppColor().colorRed,
+            title: Text("Edit Product ${widget.productModel.productName} ", style: TextStyle(color: Colors.white),),
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -343,6 +344,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
                     ),
                   ),
+                  Container(
+                    height: 65,
+                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: TextFormField(
+                      cursorColor: AppConstant.colorRed,
+                      textInputAction: TextInputAction.next,
+                      controller: quantityController,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
+                        hintText: "Quantity",
+                        hintStyle: TextStyle(fontSize: 12.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
 
                   ElevatedButton(
                     onPressed: () async {
@@ -369,6 +391,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             productDescriptionController.text.trim(),
                         createdAt: widget.productModel.createdAt,
                         updatedAt: DateTime.now(),
+                        quantity: quantityController.text.trim(),
                       );
 
                       await FirebaseFirestore.instance
