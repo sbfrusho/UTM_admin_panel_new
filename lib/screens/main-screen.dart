@@ -34,7 +34,7 @@ class MainScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/logo_image.png'),
+              // Image.asset('assets/logo_image.png'),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor().colorRed,
