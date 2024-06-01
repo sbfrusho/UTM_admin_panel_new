@@ -47,6 +47,18 @@ class MainScreen extends StatelessWidget {
                 },
                 child: Text('Sign In' , style: TextStyle(color: Colors.white),),
               ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor().colorRed,
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  textStyle: TextStyle(fontSize: 20 , color: Colors.white),
+                ),
+                onPressed: () {
+                  // Navigate to sign-in screen
+                  Get.offAll(SignUpScreen());
+                },
+                child: Text('Sign Up' , style: TextStyle(color: Colors.white),),
+              ),
             ],
           ),
         ),

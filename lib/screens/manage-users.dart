@@ -1,8 +1,10 @@
 import 'package:admin_panel/const/app-colors.dart';
+import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';// Make sure to import the UserDetailScreen
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';// Make sure to import the UserDetailScreen
 
 class ManageUsers extends StatelessWidget {
   @override
@@ -11,6 +13,9 @@ class ManageUsers extends StatelessWidget {
       appBar: AppBar(
         title: Text('All Users' , style: TextStyle(color: Colors.white),),
         backgroundColor: AppColor().colorRed,
+        leading: IconButton(icon: Icon(Icons.arrow_back),
+        onPressed: () => Get.offAll(AdminScreen()),
+        ),
       ),
       body: Container(
         color: AppColor().backgroundColor,
