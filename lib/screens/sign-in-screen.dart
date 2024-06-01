@@ -44,7 +44,7 @@ class _SignInScreenState extends State<SignInScreen> {
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: [
-              Image.asset('assets/image 1.png'),
+              Image.asset('assets/logo_image.png'),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),
