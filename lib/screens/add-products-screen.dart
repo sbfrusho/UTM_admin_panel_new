@@ -44,6 +44,7 @@ class AddProductScreen extends StatelessWidget {
           onPressed: ()=>Get.offAll(AdminScreen()),
         ),
         
+        
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),

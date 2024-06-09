@@ -1,8 +1,8 @@
-// ignore_for_file: file_names, prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, avoid_print
-
-import 'package:admin_panel/const/app-colors.dart';
-import 'package:admin_panel/models/product-model.dart';
-import 'package:admin_panel/utils/constant.dart';
+import 'dart:io';
+import 'package:admin_panel/screens/add-products-screen.dart';
+import 'package:admin_panel/screens/edit-product-screen.dart';
+import 'package:admin_panel/screens/product-detail-screen.dart';
+import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,11 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pdf/widgets.dart' as pw;
+
+import '../const/app-colors.dart';
 import '../controllers/category-dropdown_controller.dart';
 import '../controllers/is-sale-controller.dart';
-import 'add-products-screen.dart';
-import 'edit-product-screen.dart';
-import 'product-detail-screen.dart';
+import '../models/product-model.dart';
+import '../utils/AppConstant.dart';
 
 class AllProductsScreen extends StatefulWidget {
   const AllProductsScreen({super.key});
@@ -29,7 +34,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("All Products" , style: TextStyle(color: Colors.white),),
+        title: Text("All Products", style: TextStyle(color: Colors.white)),
         actions: [
           GestureDetector(
             onTap: () => Get.to(() => AddProductScreen()),
@@ -37,7 +42,18 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Icon(Icons.add),
             ),
-          )
+          ),
+          IconButton(
+            icon: Icon(Icons.print),
+            onPressed: () async {
+              try {
+                await _downloadProductsListAsPdf(context);
+              } catch (e) {
+                print('Error downloading product list: $e');
+                _showErrorDialog(context, 'Error downloading product list: $e');
+              }
+            },
+          ),
         ],
         backgroundColor: AppColor().colorRed,
       ),
@@ -90,13 +106,11 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
                   productDescription: data['productDescription'],
                   createdAt: data['createdAt'],
                   updatedAt: data['updatedAt'],
-                  quantity: data['quantity']
+                  quantity: data['quantity'],
                 );
 
                 return SwipeActionCell(
                   key: ObjectKey(productModel.productId),
-
-                  /// this key is necessary
                   trailingActions: <SwipeAction>[
                     SwipeAction(
                         title: "Delete",
@@ -179,7 +193,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
     );
   }
 
-  Future deleteImagesFromFirebase(List imagesUrls) async {
+  Future<void> deleteImagesFromFirebase(List imagesUrls) async {
     final FirebaseStorage storage = FirebaseStorage.instance;
 
     for (String imageUrl in imagesUrls) {
@@ -191,5 +205,150 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
         print("Error $e");
       }
     }
+  }
+
+  Future<void> _downloadProductsListAsPdf(BuildContext context) async {
+    try {
+      // Request storage permissions
+      if (!await _requestPermissions()) {
+        throw Exception('Storage permissions not granted');
+      }
+
+      final querySnapshot = await FirebaseFirestore.instance.collection('products').get();
+      final products = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      // Create a PDF document
+      final pdf = pw.Document();
+
+      // Add a page to the PDF
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.ListView.builder(
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                var product = products[index] as Map<String, dynamic>;
+                return pw.Padding(
+                  padding: const pw.EdgeInsets.all(10),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Product Name: ${product['productName']}'),
+                      pw.Text('Category: ${product['categoryName']}'),
+                      pw.Text('Sale Price: ${product['salePrice']}'),
+                      pw.Text('Full Price: ${product['fullPrice']}'),
+                      pw.Text('Delivery Time: ${product['deliveryTime']}'),
+                      pw.Text('Description: ${product['productDescription']}'),
+                      pw.Text('Quantity: ${product['quantity']}'),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      );
+
+      // Get the directory to save the file
+      final directory = Directory('/storage/emulated/0/Download');
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+      final path = '${directory.path}/products.pdf';
+      final file = File(path);
+
+      // Write the PDF data to the file
+      await file.writeAsBytes(await pdf.save());
+
+      print("This is the path file: $file");
+
+      // Show a confirmation dialog
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Download Complete'),
+            content: Text('The product list has been saved to $path'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print('Error during downloading process: $e');
+      _showErrorDialog(context, 'Failed to download product list: $e');
+    }
+  }
+
+  Future<bool> _requestPermissions() async {
+    final status = await Permission.storage.request();
+    if (status.isGranted) {
+      return true;
+    } else {
+      // Open app settings if permission is permanently denied
+      if (await Permission.storage.isPermanentlyDenied) {
+        await openAppSettings();
+      }
+      return false;
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String s) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(s),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class UserCard extends StatelessWidget {
+  final String userId;
+  final String name;
+  final String email;
+
+  const UserCard({
+    required this.userId,
+    required this.name,
+    required this.email,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserDetailScreen(userId: userId),
+          ),
+        );
+      },
+      child: Card(
+        margin: EdgeInsets.all(8.0),
+        child: ListTile(
+          title: Text(name),
+          subtitle: Text(email),
+        ),
+      ),
+    );
   }
 }

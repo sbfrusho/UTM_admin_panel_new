@@ -1,5 +1,9 @@
 // ignore_for_file: file_names, sort_child_properties_last, prefer_const_constructors, unused_local_variable, must_be_immutable, avoid_print, unnecessary_string_interpolations, deprecated_member_use, unused_element, unnecessary_null_comparison
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
+import 'package:admin_panel/screens/select-type.dart';
+import 'package:admin_panel/screens/seller/seller-home-screen.dart';
+import 'package:admin_panel/screens/seller/seller-sign-in-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -85,7 +89,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       ),
                       leading: CircleAvatar(
                         radius: 22.0,
-                        backgroundColor: AppConstant.colorBlue,
+                        backgroundColor: AppColor().colorRed,
                         child: Text(
                           firstLetter,
                           style: TextStyle(color: AppConstant.colorWhite),
@@ -108,7 +112,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       ),
                       leading: CircleAvatar(
                         radius: 22.0,
-                        backgroundColor: AppConstant.colorBlue,
+                        backgroundColor: AppColor().colorRed,
                         child: Text(
                           "G",
                           style: TextStyle(color: AppConstant.colorWhite),
@@ -126,7 +130,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
                 onTap: () {
-                  Get.offAll(() => MainScreen());
+                  Get.offAll(() => SellerHomeScreen());
                 },
                 title: Text(
                   'Home',
@@ -228,33 +232,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
-                onTap: () {
-                  // Get.to(() => ContactScreen());
-                },
-                title: Text(
-                  'Contact',
-                  style: TextStyle(color: Colors.white),
-                ),
-                leading: Icon(
-                  Icons.phone,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: ListTile(
                 onTap: () async {
-                  // if (user != null) {
-                  //   EasyLoading.show();
-                  //   await FirebaseAuth.instance.signOut();
-                  //   await _googleSignIn.signOut();
-                  //   Get.offAll(() => MainScreen());
-                  //   EasyLoading.dismiss();
-                  // } else {
-                  //   Get.back();
-                  //   await googleSignInController.signInWithGoogle();
-                  // }
+                  if (user != null) {
+                    EasyLoading.show();
+                    await FirebaseAuth.instance.signOut();
+                    Get.offAll(() => SelectTypeScreen());
+                    EasyLoading.dismiss();
+                  } 
                 },
                 title: Text(
                   user != null ? 'Logout' : 'Login',
@@ -269,7 +253,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ],
         ),
         width: Get.width - 80.0,
-        backgroundColor: AppConstant.colorBlue,
+        backgroundColor: AppColor().colorRed,
         // backgroundColor: Colors.grey.shade900,
       ),
     );

@@ -1,11 +1,16 @@
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/seller-screen.dart';
+import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import '../screens/admin-screen.dart';
 class SignInController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  var isPasswordVisible = false.obs;
 
   Future<void> signInWithEmailAndPassword({
     required String email,
@@ -41,7 +46,7 @@ class SignInController {
           // For example, navigate to a regular user screen
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => SellerScreen()),
+            MaterialPageRoute(builder: (context) => SellerHomeScreen()),
           );
         }
       } else {
@@ -53,6 +58,7 @@ class SignInController {
       print('User signed in successfully');
     } catch (e) {
       print('Error signing in: $e');
+      Fluttertoast.showToast(msg: "Invalid Email" , backgroundColor: AppColor().colorRed);
       // Handle sign-in errors here
       // For example, show a snackbar with the error message
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error signing in')));

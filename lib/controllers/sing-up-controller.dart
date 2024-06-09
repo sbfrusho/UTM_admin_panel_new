@@ -25,7 +25,7 @@ class SignUpController {
         'username': username,
         'email': email,
         'phone': phone,
-        'isAdmin': isAdmin, // Assuming a new user is not an admin by default
+        'isAdmin': false, // Assuming a new user is not an admin by default
         'isActive': true, // Assuming a new user is active by default
         'createdOn': Timestamp.now(), // Timestamp of user creation
       });

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class AllUsersScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('All Users', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.red,
+        backgroundColor: AppColor().colorRed,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),

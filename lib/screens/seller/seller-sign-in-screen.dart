@@ -2,18 +2,18 @@
 
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/main-screen.dart';
-import 'package:admin_panel/screens/select-type.dart';
+import 'package:admin_panel/screens/seller/seller-register-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/sign-in-controller.dart'; // Import your signin controller
+import '../../controllers/sign-in-controller.dart'; // Import your signin controller
 
-class SignInScreen extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -31,11 +31,11 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor().colorRed,
-        title: Text('Sign In' , style: TextStyle(color: Colors.white),),
+        title: Text('Sign In', style: TextStyle(color: Colors.white)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Get.offAll(SelectTypeScreen());
+            Get.offAll(MainScreen());
           },
         ),
       ),
@@ -58,13 +58,17 @@ class _SignInScreenState extends State<SignInScreen> {
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _signIn,
-                child: Text('Sign In' , style: TextStyle(color: Colors.white),),
-                style: ElevatedButton.styleFrom(
-                backgroundColor: AppColor().colorRed,
-                minimumSize: Size(double.infinity, 50),
-                padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-                textStyle: TextStyle(fontSize: 20),
+                child: Text('Sign In'),
               ),
+              SizedBox(height: 16.0),
+              TextButton(
+                onPressed: () {
+                  Get.to(RegisterScreen());
+                },
+                child: Text(
+                  'Create Account',
+                  style: TextStyle(color: AppColor().colorRed),
+                ),
               ),
             ],
           ),
