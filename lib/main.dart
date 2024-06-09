@@ -1,6 +1,5 @@
 import 'package:admin_panel/screens/admin-screen.dart';
-import 'package:admin_panel/screens/main-screen.dart';
-import 'package:admin_panel/screens/sign-in-screen.dart';
+import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:MainScreen(),
+      home:AllUsersScreen(),
       builder: EasyLoading.init(),
     );
   }

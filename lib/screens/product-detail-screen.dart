@@ -68,6 +68,23 @@ class SingleProductDetailScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Text("Quantity"),
+                        Container(
+                          width: Get.width / 2,
+                          child: Text(
+                            productModel.quantity.toString(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Text("Delivery Time"),
                         Container(
                           width: Get.width / 2,

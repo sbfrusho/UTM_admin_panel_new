@@ -1,22 +1,38 @@
-import 'package:admin_panel/const/app-colors.dart';
-import 'package:admin_panel/screens/admin-screen.dart';
+import 'dart:io';
 import 'package:admin_panel/screens/user-details-screen.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';// Make sure to import the UserDetailScreen
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class AllUsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Users' , style: TextStyle(color: Colors.white),),
-        backgroundColor: AppColor().colorRed,
-        leading: IconButton(icon: Icon(Icons.arrow_back),onPressed: ()=> Get.offAll(AdminScreen()),),
+        title: Text('All Users', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.red,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.print),
+            onPressed: () async {
+              try {
+                await _downloadUsersListAsPdf(context);
+              } catch (e) {
+                print('Error downloading user list: $e');
+                _showErrorDialog(context, 'Error downloading user list: $e');
+              }
+            },
+          ),
+        ],
       ),
       body: Container(
-        color: AppColor().backgroundColor,
+        color: Colors.grey[200],
         child: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('users').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -35,12 +51,10 @@ class AllUsersScreen extends StatelessWidget {
               itemCount: users.length,
               itemBuilder: (context, index) {
                 var user = users[index].data() as Map<String, dynamic>;
-                print(user['email']);
                 return UserCard(
                   userId: users[index].id,
                   name: user['name'],
                   email: user['email'],
-                  // onDelete: () => _deleteUser(context, users[index].id, user['email']),
                 );
               },
             );
@@ -50,34 +64,111 @@ class AllUsersScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _deleteUser(BuildContext context, String userId, String userEmail) async {
+  Future<void> _downloadUsersListAsPdf(BuildContext context) async {
     try {
-      // Step 1: Delete user's data from Firestore
-      await FirebaseFirestore.instance.collection('users').doc(userId).delete();
-      
-      // Step 2: Delete user's account from Firebase Authentication
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: userEmail,
-        password: 'password', // provide the user's password here
-      );
-
-      User? currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser != null) {
-        await currentUser.delete();
+      // Request storage permissions
+      if (!await _requestPermissions()) {
+        throw Exception('Storage permissions not granted');
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('User deleted successfully.'),
+      final querySnapshot = await FirebaseFirestore.instance.collection('users').get();
+      final users = querySnapshot.docs.map((doc) => doc.data()).toList();
+
+      // Create a PDF document
+      final pdf = pw.Document();
+
+      // Add a page to the PDF
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                var user = users[index] as Map<String, dynamic>;
+                return pw.Padding(
+                  padding: const pw.EdgeInsets.all(10),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('Name: ${user['name']}'),
+                      pw.Text('Email: ${user['email']}'),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
         ),
       );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to delete user: $error'),
-        ),
+
+      // Get the directory to save the file
+      final directory = Directory('/storage/emulated/0/Download');
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+      final path = '${directory.path}/users.pdf';
+      final file = File(path);
+
+      // Write the PDF data to the file
+      await file.writeAsBytes(await pdf.save());
+
+      print("This is the path file: $file");
+
+      // Show a confirmation dialog
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Download Complete'),
+            content: Text('The user list has been saved to $path'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
       );
+    } catch (e) {
+      print('Error during downloading process: $e');
+      _showErrorDialog(context, 'Failed to download user list: $e');
     }
+  }
+
+  Future<bool> _requestPermissions() async {
+    final status = await Permission.storage.request();
+    if (status.isGranted) {
+      return true;
+    } else {
+      // Open app settings if permission is permanently denied
+      if (await Permission.storage.isPermanentlyDenied) {
+        await openAppSettings();
+      }
+      return false;
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -85,13 +176,11 @@ class UserCard extends StatelessWidget {
   final String userId;
   final String name;
   final String email;
-  // final VoidCallback onDelete;
 
   const UserCard({
     required this.userId,
     required this.name,
     required this.email,
-    // required this.onDelete,
   });
 
   @override
@@ -110,10 +199,6 @@ class UserCard extends StatelessWidget {
         child: ListTile(
           title: Text(name),
           subtitle: Text(email),
-          // trailing: IconButton(
-          //   icon: Icon(Icons.delete),
-          //   onPressed: onDelete,
-          // ),
         ),
       ),
     );
