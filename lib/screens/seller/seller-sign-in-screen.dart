@@ -2,6 +2,7 @@
 
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/main-screen.dart';
+import 'package:admin_panel/screens/seller/forgot-password-screen.dart';
 import 'package:admin_panel/screens/seller/seller-register-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,17 +59,37 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _signIn,
-                child: Text('Sign In'),
+                child: Text(
+                  'Sign In',
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor().colorRed,
+                ),
               ),
               SizedBox(height: 16.0),
-              TextButton(
-                onPressed: () {
-                  Get.to(RegisterScreen());
-                },
-                child: Text(
-                  'Create Account',
-                  style: TextStyle(color: AppColor().colorRed),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Get.to(RegisterScreen());
+                    },
+                    child: Text(
+                      'Create Account',
+                      style: TextStyle(color: AppColor().colorRed),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.to(ForgotPasswordScreen());
+                    },
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: AppColor().colorRed),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

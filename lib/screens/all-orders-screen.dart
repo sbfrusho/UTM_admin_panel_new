@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, avoid_unnecessary_containers
+import 'package:admin_panel/screens/single-order-items.dart';
 import 'package:admin_panel/utils/AppConstant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../const/app-colors.dart';
 
@@ -15,14 +16,50 @@ class AllOrdersScreen extends StatefulWidget {
 
 class _AllOrdersScreenState extends State<AllOrdersScreen> {
   late Future<QuerySnapshot> _ordersFuture;
+  String _selectedStatus = 'All';
+  final List<String> _statusOptions = ['All', 'pending', 'accepted', 'declined'];
 
   @override
   void initState() {
     super.initState();
-    _ordersFuture = FirebaseFirestore.instance
-        .collection('orders')
-        .orderBy('createdAt', descending: true)
-        .get();
+    _ordersFuture = _fetchOrders();
+  }
+
+  Future<QuerySnapshot> _fetchOrders({String status = 'All'}) async {
+    try {
+      if (status == 'All') {
+        return await FirebaseFirestore.instance
+            .collection('orders')
+            .orderBy('createdAt', descending: true)
+            .get();
+      } else {
+        return await FirebaseFirestore.instance
+            .collection('orders')
+            .where('status', isEqualTo: status)
+            .orderBy('createdAt', descending: true)
+            .get();
+      }
+    } catch (e) {
+      if (e is FirebaseException && e.code == 'failed-precondition') {
+        // Handle the case where the index is missing
+        print('Firestore index required: ${e.message}');
+        // Optionally show a message to the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Firestore index required. Please create the index.'),
+          ),
+        );
+      } else {
+        print('Error fetching orders: $e');
+      }
+      rethrow;
+    }
+  }
+
+  void _onSearch() {
+    setState(() {
+      _ordersFuture = _fetchOrders(status: _selectedStatus);
+    });
   }
 
   @override
@@ -34,14 +71,65 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: AppColor().colorRed,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    color: AppColor().backgroundColor,
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Search Orders',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 16.0),
+                        DropdownButton<String>(
+                          value: _selectedStatus,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedStatus = newValue!;
+                            });
+                          },
+                          items: _statusOptions.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(height: 16.0),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor().colorRed,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _onSearch();
+                          },
+                          child: Text('Search'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Container(
         color: AppColor().backgroundColor,
         child: FutureBuilder(
           future: _ordersFuture,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
+              print('Snapshot error: ${snapshot.error}');
               return Container(
                 child: Center(
                   child: Text('Error occurred while fetching orders!'),
@@ -73,7 +161,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                 return Card(
                   elevation: 5,
                   child: ListTile(
-                    // onTap: () => Get.to(() => OrderDetails(userId: data['customerId'])),
+                    onTap: () => Get.offAll(OrderItemsScreen(orderId: data.id)),
                     leading: CircleAvatar(
                       backgroundColor: AppConstant.colorRed,
                       child: Text(data['customerName'][0]),
@@ -99,8 +187,9 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                 Column(
                                   children: [
                                     ElevatedButton(
-                                      style: ButtonStyle(),
-                                      
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                      ),
                                       onPressed: () async {
                                         // Update the status in the "orders" collection to "accepted"
                                         try {
@@ -109,29 +198,20 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                               .doc(data.id)
                                               .update({'status': 'accepted'});
                                           // Show a success message
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text(
-                                                  'Order accepted successfully'),
+                                              content: Text('Order accepted successfully'),
                                             ),
                                           );
                                           // Reload the orders after updating the status
                                           setState(() {
-                                            _ordersFuture = FirebaseFirestore
-                                                .instance
-                                                .collection('orders')
-                                                .orderBy('createdAt',
-                                                    descending: true)
-                                                .get();
+                                            _ordersFuture = _fetchOrders(status: _selectedStatus);
                                           });
                                         } catch (e) {
                                           // Show an error message if updating the status fails
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text(
-                                                  'Failed to accept order: $e'),
+                                              content: Text('Failed to accept order: $e'),
                                             ),
                                           );
                                         }
@@ -139,6 +219,9 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                       child: Text('Accept'),
                                     ),
                                     ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                      ),
                                       onPressed: () async {
                                         try {
                                           // Delete the order document from Firestore
@@ -148,42 +231,33 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                               .delete();
 
                                           // Show a success message
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text(
-                                                  'Order rejected successfully'),
+                                              content: Text('Order rejected successfully'),
                                             ),
                                           );
 
                                           // Reload the orders after deleting the order
                                           setState(() {
-                                            _ordersFuture = FirebaseFirestore
-                                                .instance
-                                                .collection('orders')
-                                                .orderBy('createdAt',
-                                                    descending: true)
-                                                .get();
+                                            _ordersFuture = _fetchOrders(status: _selectedStatus);
                                           });
                                         } catch (e) {
                                           // Show an error message if deleting the order fails
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text(
-                                                  'Failed to reject order: $e'),
+                                              content: Text('Failed to reject order: $e'),
                                             ),
                                           );
                                         }
                                       },
-                                      child: Text('Delete'),
+                                      child: Text('Reject'),
                                     ),
                                   ],
                                 ),
                               ],
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),

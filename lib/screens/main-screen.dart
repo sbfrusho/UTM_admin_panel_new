@@ -6,6 +6,7 @@ import 'package:admin_panel/screens/sign-up-screen.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class MainScreen extends StatelessWidget {
@@ -29,23 +30,45 @@ class MainScreen extends StatelessWidget {
       ),
       drawer: DrawerWidget(),
       body: Container(
-        color: AppColor().backgroundColor,
+        color: Colors.white,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Image.asset('assets/logo_image.png'),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor().colorRed,
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  textStyle: TextStyle(fontSize: 20 , color: Colors.white),
+              Container(
+                height: 200,
+                child: Image(
+                  image: AssetImage("assets/logo_utm.png"),
                 ),
-                onPressed: () {
-                  // Navigate to sign-in screen
-                  Get.offAll(SignInScreen());
-                },
-                child: Text('Sign In' , style: TextStyle(color: Colors.white),),
+              ),
+              SizedBox(
+                height: 80,
+              ),
+              Column(
+                children: [
+                  Image(
+                    image: AssetImage("assets/admin2.png"),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColor().colorRed,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                      textStyle: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                    onPressed: () {
+                      // Navigate to sign-in screen
+                      Get.offAll(SignInScreen());
+                    },
+                    child: Text(
+                      'Sign In',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 // main_screen.dart
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/admin-screen.dart';
+import 'package:admin_panel/screens/main-screen.dart';
 import 'package:admin_panel/screens/seller/seller-sign-in-screen.dart';
 import 'package:admin_panel/screens/sign-in-screen.dart';
 import 'package:admin_panel/utils/AppConstant.dart';
@@ -21,7 +22,7 @@ class SelectTypeScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Get.to(() => SignInScreen());
+                Get.to(() => MainScreen());
               },
               child: Text('Admin' , style: TextStyle(color: Colors.white),),
               style: ElevatedButton.styleFrom(

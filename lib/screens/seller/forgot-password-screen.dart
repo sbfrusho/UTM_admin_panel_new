@@ -82,7 +82,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       GestureDetector(
                         onTap: (){
                           _resetPassword();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                           Fluttertoast.showToast(msg: "Password reset email sent. Please check your inbox.");
                         },
                         child: const Text("Send" ,style: TextStyle(color: Colors.white),))

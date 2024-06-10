@@ -1,4 +1,5 @@
 import 'package:admin_panel/screens/main-screen.dart';
+import 'package:admin_panel/screens/select-type.dart';
 import 'package:admin_panel/screens/seller/seller-sign-in-screen.dart';
 import 'package:admin_panel/screens/sign-up-screen.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Get.offAll(MainScreen());
+            Get.offAll(SelectTypeScreen());
           },
         ),
       ),
