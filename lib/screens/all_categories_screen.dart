@@ -26,7 +26,7 @@ class AllCategoriesScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColor().colorRed,
         title: const Text("All Categories" , style: TextStyle(color: Colors.white),),
-        leading: IconButton(icon: Icon(Icons.arrow_back),onPressed: (){
+        leading: IconButton(icon: Icon(Icons.arrow_back , color: Colors.white,),onPressed: (){
           Get.offAll(AdminScreen());
         },),
         actions: [
@@ -34,7 +34,7 @@ class AllCategoriesScreen extends StatelessWidget {
             onTap: () => Get.to(() => const AddCategoriesScreen()),
             child: const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.add),
+              child: Icon(Icons.add , color: Colors.white,),
             ),
           ),
         ],

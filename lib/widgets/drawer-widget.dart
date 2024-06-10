@@ -3,6 +3,7 @@ import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/select-type.dart';
 import 'package:admin_panel/screens/seller/seller-home-screen.dart';
+import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:admin_panel/screens/seller/seller-sign-in-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
                 onTap: () {
-                  Get.to(() => AllOrdersScreen());
+                  Get.to(() => SellerAllOrdersScreen());
                 },
                 title: Text(
                   'Orders',

@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:admin_panel/const/app-colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -28,8 +29,13 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Categories"),
-        backgroundColor: AppConstant.colorRed,
+        title: const Text("Add Categories", style: TextStyle(color: Colors.white)),
+        backgroundColor: AppColor().colorRed,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Get.back();
+          },),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),

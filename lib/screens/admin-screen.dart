@@ -66,13 +66,6 @@ class AdminScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Implement add product/user action
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
-      ),
     );
   }
 

@@ -6,16 +6,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../const/app-colors.dart';
+import '../../const/app-colors.dart';
 
-class AllOrdersScreen extends StatefulWidget {
-  const AllOrdersScreen({Key? key}) : super(key: key);
+class SellerAllOrdersScreen extends StatefulWidget {
+  const SellerAllOrdersScreen({Key? key}) : super(key: key);
 
   @override
-  _AllOrdersScreenState createState() => _AllOrdersScreenState();
+  _SellerAllOrdersScreenState createState() => _SellerAllOrdersScreenState();
 }
 
-class _AllOrdersScreenState extends State<AllOrdersScreen> {
+class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
   late Future<QuerySnapshot> _ordersFuture;
   String _selectedStatus = 'All';
   final List<String> _statusOptions = ['All', 'pending', 'accepted', 'declined'];

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class SellerHomeScreen extends StatelessWidget {
                   context,
                   'Orders List',
                   Icons.list,
-                  AllOrdersScreen(),
+                  SellerAllOrdersScreen(),
                 ),
               ],
             ),
@@ -60,13 +61,6 @@ class SellerHomeScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Implement add product/user action
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
       ),
     );
   }

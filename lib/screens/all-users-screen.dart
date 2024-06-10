@@ -3,7 +3,6 @@ import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -15,12 +14,12 @@ class AllUsersScreen extends StatelessWidget {
         title: Text('All Users', style: TextStyle(color: Colors.white)),
         backgroundColor: AppColor().colorRed,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back , color: Colors.white,),
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.print),
+            icon: Icon(Icons.print , color: Colors.white,),
             onPressed: () async {
               try {
                 await _downloadUsersListAsPdf(context);
