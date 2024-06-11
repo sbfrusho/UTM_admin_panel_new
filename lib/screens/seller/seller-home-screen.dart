@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/profile.dart';
 import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -10,6 +11,7 @@ import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all-orders-screen.dart';
 import 'package:admin_panel/widgets/drawer-widget-admin.dart';
+import 'package:get/get.dart';
 
 class SellerHomeScreen extends StatelessWidget {
   @override
@@ -17,7 +19,7 @@ class SellerHomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Admin Panel',
+          'Home Screen',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: AppColor().colorRed,
@@ -28,7 +30,7 @@ class SellerHomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _buildLineChart(),
+            // _buildLineChart(),
             SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -62,6 +64,75 @@ class SellerHomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+        
+        // sets the background color of the `BottomNavigationBar`
+        canvasColor: AppColor().colorRed,
+        // sets the active color of the `BottomNavigationBar` if `Brightness` is light
+        // primaryColor: Colors.red,
+        textTheme: Theme
+            .of(context)
+            .textTheme
+            .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
+        child: BottomNavigationBar(
+            currentIndex: 0,
+            selectedItemColor: Colors.red,
+            unselectedItemColor: Colors.grey,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag),
+                label: 'Products',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Users',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.category),
+                label: 'Categories',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle),
+                label: 'Profile',
+              ),
+            ],
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SellerHomeScreen()),
+                  );
+                  break;
+                case 1:
+                  // Handle the Wishlist item tap
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
+                  break;
+                case 2:
+                  // Handle the Categories item tap
+                  Get.offAll(AllUsersScreen());
+                  break;
+                case 3:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                  );
+                  break;
+                case 4:
+                  // Handle the Profile item tap
+                  Get.offAll(ProfileScreen());
+                  break;
+              }
+            },
+          ),
+      ),
+
     );
   }
 

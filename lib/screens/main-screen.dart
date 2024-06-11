@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
 import 'package:admin_panel/const/app-colors.dart';
+import 'package:admin_panel/screens/select-type.dart';
 import 'package:admin_panel/screens/sign-in-screen.dart';
 import 'package:admin_panel/screens/sign-up-screen.dart';
 import 'package:admin_panel/utils/constant.dart';
@@ -17,14 +18,12 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor().colorRed,
-        title: const Text(
-          "Admin Panel",
-          style: TextStyle(color: Colors.white),
+        flexibleSpace: Center(
+          child: Title(color: Colors.white, child: Text("Admin Panel" , style: TextStyle(color: Colors.white , fontSize: 20),))
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
+          onPressed: () {Get.offAll(SelectTypeScreen());
           },
         ),
       ),
