@@ -40,6 +40,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     fullPriceController.text = widget.productModel.fullPrice;
     deliveryTimeController.text = widget.productModel.deliveryTime;
     productDescriptionController.text = widget.productModel.productDescription;
+    quantityController.text = widget.productModel.quantity;
   }
 
   @override
@@ -50,7 +51,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColor().colorRed,
-            title: Text("Edit Product ${widget.productModel.productName} ", style: TextStyle(color: Colors.white),),
+            title: Text("${widget.productModel.productName}", style: TextStyle(color: Colors.white),),
           ),
           body: SingleChildScrollView(
             child: Container(
