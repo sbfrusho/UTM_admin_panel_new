@@ -195,15 +195,18 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Phone: ${data['customerPhone']}'),
-                            Text('Address: ${data['customerAddress']}'),
-                            Text('Total Price: ${data['totalPrice']} RM'),
-                            Text('Delivery Time: ${data['deliveryTime']}'),
-                            Text('Status: ${data['status']}'),
-                          ],
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Phone: ${data['customerPhone']}'),
+                              Text('Address: ${data['customerAddress']}'),
+                              Text('Total Price: ${data['totalPrice']} RM'),
+                              Text('Delivery Time: ${data['deliveryTime']}'),
+                              Text('Status: ${data['status']}'),
+                            ],
+                          ),
                         ),
                         Column(
                           children: [
@@ -225,7 +228,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order accepted successfully'),
+                                              content: Text('Order accepted '),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -258,7 +261,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order declined successfully'),
+                                              content: Text('Order declined '),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -290,7 +293,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order pending successfully'),
+                                              content: Text('Order in progress'),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -323,7 +326,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
                                     //       // Show a success message
                                     //       ScaffoldMessenger.of(context).showSnackBar(
                                     //         SnackBar(
-                                    //           content: Text('Order rejected successfully'),
+                                    //           content: Text('Order rejected '),
                                     //         ),
                                     //       );
 
