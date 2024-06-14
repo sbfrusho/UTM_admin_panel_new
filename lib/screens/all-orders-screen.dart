@@ -24,7 +24,7 @@ class AllOrdersScreen extends StatefulWidget {
 class _AllOrdersScreenState extends State<AllOrdersScreen> {
   late Future<QuerySnapshot> _ordersFuture;
   String _selectedStatus = 'All';
-  final List<String> _statusOptions = ['All', 'pending', 'accepted', 'declined','in progress'];
+  final List<String> _statusOptions = ['All', 'accepted', 'declined','in progress'];
 
   @override
   void initState() {
