@@ -22,7 +22,7 @@ class SelectTypeScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Get.to(() => MainScreen());
+                Get.to(() => SignInScreen());
               },
               child: Text('Admin' , style: TextStyle(color: Colors.white),),
               style: ElevatedButton.styleFrom(

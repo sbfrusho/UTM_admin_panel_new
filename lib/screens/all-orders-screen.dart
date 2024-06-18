@@ -13,6 +13,8 @@ import 'package:get/get.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
 import '../const/app-colors.dart';
+import '../models/order-model-2.dart';
+import '../models/order-model.dart';
 
 class AllOrdersScreen extends StatefulWidget {
   const AllOrdersScreen({Key? key}) : super(key: key);
@@ -429,105 +431,71 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
       ),
     );
   }
-  Future<void> _downloadProductsListAsPdf(BuildContext context) async {
-    try {
-      // Request storage permissions
-      if (!await _requestPermissions()) {
-        throw Exception('Storage permissions not granted');
-      }
 
-      final querySnapshot = await FirebaseFirestore.instance.collection('products').get();
-      final products = querySnapshot.docs.map((doc) => doc.data()).toList();
+Future<void> _downloadProductsListAsPdf(BuildContext context) async {
+  try {
+    // Request storage permissions
+    if (!await _requestPermissions()) {
+      throw Exception('Storage permissions not granted');
+    }
 
-      // Create a PDF document
-      final pdf = pw.Document();
+    final querySnapshot = await FirebaseFirestore.instance.collection('orders').get();
+    final orders = querySnapshot.docs.map((doc) => OrderModel2.fromJson(doc.data() as Map<String, dynamic>)).toList();
 
-      // Add a page to the PDF
-      pdf.addPage(
-        pw.Page(
-          build: (pw.Context context) {
-            return pw.ListView.builder(
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                var product = products[index] as Map<String, dynamic>;
-                return pw.Padding(
-                  padding: const pw.EdgeInsets.all(10),
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text('Product Name: ${product['productName']}'),
-                      pw.Text('Category: ${product['categoryName']}'),
-                      pw.Text('Sale Price: ${product['salePrice']}'),
-                      pw.Text('Full Price: ${product['fullPrice']}'),
-                      pw.Text('Delivery Time: ${product['deliveryTime']}'),
-                      pw.Text('Description: ${product['productDescription']}'),
-                      pw.Text('Quantity: ${product['quantity']}'),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      );
+    // Create a PDF document
+    final pdf = pw.Document();
 
-      // Get the directory to save the file
-      final directory = Directory('/storage/emulated/0/Download');
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
-      }
-      final path = '${directory.path}/products.pdf';
-      final file = File(path);
-
-      // Write the PDF data to the file
-      await file.writeAsBytes(await pdf.save());
-
-      print("This is the path file: $file");
-
-      // Show a confirmation dialog
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Download Complete'),
-            content: Text('The product list has been saved to $path'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
+    // Add a page to the PDF
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              var order = orders[index];
+              return pw.Padding(
+                padding: const pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Customer Name: ${order.customerName}'),
+                    pw.Text('Customer Phone: ${order.customerPhone}'),
+                    pw.Text('Customer Address: ${order.customerAddress}'),
+                    pw.Text('Payment Method: ${order.paymentMethod}'),
+                    pw.Text('Delivery Time: ${order.deliveryTime}'),
+                    pw.Text('Total Price: ${order.totalPrice}'),
+                    pw.Text('Status: ${order.status}'),
+                    pw.Text('Created At: ${order.createdAt}'),
+                    pw.Text('Unique ID: ${order.uniqueId}'),
+                  ],
+                ),
+              );
+            },
           );
         },
-      );
-    } catch (e) {
-      print('Error during downloading process: $e');
-      _showErrorDialog(context, 'Failed to download product list: $e');
-    }
-  }
+      ),
+    );
 
-  Future<bool> _requestPermissions() async {
-    final status = await Permission.storage.request();
-    if (status.isGranted) {
-      return true;
-    } else {
-      // Open app settings if permission is permanently denied
-      if (await Permission.storage.isPermanentlyDenied) {
-        await openAppSettings();
-      }
-      return false;
+    // Get the directory to save the file
+    final directory = Directory('/storage/emulated/0/Download');
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
     }
-  }
+    final path = '${directory.path}/orders.pdf';
+    final file = File(path);
 
-  void _showErrorDialog(BuildContext context, String s) {
+    // Write the PDF data to the file
+    await file.writeAsBytes(await pdf.save());
+
+    print("This is the path file: $file");
+
+    // Show a confirmation dialog
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Error'),
-          content: Text(s),
+          title: Text('Download Complete'),
+          content: Text('The product list has been saved to $path'),
           actions: [
             TextButton(
               onPressed: () {
@@ -539,5 +507,41 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
         );
       },
     );
+  } catch (e) {
+    print('Error during downloading process: $e');
+    _showErrorDialog(context, 'Failed to download product list: $e');
   }
 }
+
+Future<bool> _requestPermissions() async {
+  final status = await Permission.storage.request();
+  if (status.isGranted) {
+    return true;
+  } else {
+    // Open app settings if permission is permanently denied
+    if (await Permission.storage.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+    return false;
+  }
+}
+
+void _showErrorDialog(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}}
