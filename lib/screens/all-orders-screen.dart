@@ -137,17 +137,17 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
               );
             },
           ),
-          IconButton(
-            icon: Icon(Icons.print , color: Colors.white,),
-            onPressed: () async {
-              try {
-                await _downloadProductsListAsPdf(context);
-              } catch (e) {
-                print('Error downloading product list: $e');
-                _showErrorDialog(context, 'Error downloading product list: $e');
-              }
-            },
-          ),
+          // IconButton(
+          //   // icon: Icon(Icons.print , color: Colors.white,),
+          //   onPressed: () async {
+          //     try {
+          //       await _downloadProductsListAsPdf(context);
+          //     } catch (e) {
+          //       print('Error downloading product list: $e');
+          //       _showErrorDialog(context, 'Error downloading product list: $e');
+          //     }
+          //   },
+          // ),
         ],
       ),
       body: Container(
