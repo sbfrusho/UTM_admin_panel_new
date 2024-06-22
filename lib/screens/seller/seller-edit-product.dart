@@ -8,6 +8,7 @@ import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/Seller-all-product.dart'; // Make sure to import the screen
 import 'package:admin_panel/utils/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,18 +16,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import '../controllers/category-dropdown_controller.dart';
-import '../controllers/is-sale-controller.dart';
+import '../../controllers/category-dropdown_controller.dart';
+import '../../controllers/is-sale-controller.dart';
 
-class EditProductScreen extends StatefulWidget {
+class SellerEditProductScreen extends StatefulWidget {
   ProductModel productModel;
-  EditProductScreen({super.key, required this.productModel});
+  SellerEditProductScreen({super.key, required this.productModel});
 
   @override
-  State<EditProductScreen> createState() => _EditProductScreenState();
+  State<SellerEditProductScreen> createState() => _SellerEditProductScreenState();
 }
 
-class _EditProductScreenState extends State<EditProductScreen> {
+class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
   IsSaleController isSaleController = Get.put(IsSaleController());
   CategoryDropDownController categoryDropDownController =
       Get.put(CategoryDropDownController());
@@ -36,6 +37,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   TextEditingController deliveryTimeController = TextEditingController();
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -57,14 +59,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
             backgroundColor: AppColor().colorRed,
             title: Text("${widget.productModel.productName.split(' ').first}", style: TextStyle(color: Colors.white),),
             leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -126,7 +128,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     ),
                   ),
 
-                  //drop down
+                  // Drop down
                   GetBuilder<CategoryDropDownController>(
                     init: CategoryDropDownController(),
                     builder: (categoriesDropDownController) {
@@ -184,7 +186,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     },
                   ),
 
-                  //isSale
+                  // Is Sale
                   GetBuilder<IsSaleController>(
                     init: IsSaleController(),
                     builder: (isSaleController) {
@@ -210,7 +212,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     },
                   ),
 
-                  //form
+                  // Form
                   SizedBox(height: 10.0),
                   Container(
                     height: 65,
@@ -262,33 +264,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           : SizedBox.shrink();
                     },
                   ),
-
-                  // Obx(() {
-                  //   return isSaleController.isSale.value
-                  //       ? Container(
-                  //           height: 65,
-                  //           margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  //           child: TextFormField(
-                  //             cursorColor: AppConstant.appMainColor,
-                  //             textInputAction: TextInputAction.next,
-                  //             controller: salePriceController
-                  //               ..text = productModel.salePrice,
-                  //             decoration: InputDecoration(
-                  //               contentPadding: EdgeInsets.symmetric(
-                  //                 horizontal: 10.0,
-                  //               ),
-                  //               hintText: "Sale Price",
-                  //               hintStyle: TextStyle(fontSize: 12.0),
-                  //               border: OutlineInputBorder(
-                  //                 borderRadius: BorderRadius.all(
-                  //                   Radius.circular(10.0),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         )
-                  //       : SizedBox.shrink();
-                  // }),
 
                   SizedBox(height: 10.0),
                   Container(
@@ -358,6 +333,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
                     ),
                   ),
+                  
                   Container(
                     height: 65,
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
@@ -382,8 +358,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
                   ElevatedButton(
                     onPressed: () async {
-                      //product Model
-
                       EasyLoading.show();
                       ProductModel newProductModel = ProductModel(
                         productId: widget.productModel.productId,
@@ -414,7 +388,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           .update(newProductModel.toMap());
 
                       EasyLoading.dismiss();
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductsScreen()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SellerAllProductScreen()),
+                      );
                     },
                     child: Text("Update"),
                   )
@@ -423,67 +400,63 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ),
           ),
           bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-        // sets the background color of the `BottomNavigationBar`
-        canvasColor: AppColor().colorRed,
-        // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-        primaryColor: Colors.red,
-        textTheme: Theme
-            .of(context)
-            .textTheme
-            .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
+            data: Theme.of(context).copyWith(
+              canvasColor: AppColor().colorRed,
+              primaryColor: Colors.red,
+              textTheme: Theme.of(context).textTheme.copyWith(
+                bodySmall: TextStyle(color: Colors.yellow),
+              ),
+            ),
             child: BottomNavigationBar(
-            currentIndex: 0,
-            selectedItemColor: Colors.red,
-            unselectedItemColor: Colors.grey,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Products',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Users',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.category),
-                label: 'Categories',
-              ),
-            ],
-            onTap: (index) {
-              switch (index) {
-                case 0:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AdminScreen()),
-                  );
-                  break;
-                case 1:
-                  // Handle the Wishlist item tap
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
-                  break;
-                case 2:
-                  // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
-                  break;
-                case 3:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
-                  );
-                  break;
-                case 4:
-                  // Handle the Profile item tap
-                  // Get.offAll();
-                  break;
-              }
-            },
-                    ),
+              currentIndex: 0,
+              selectedItemColor: Colors.red,
+              unselectedItemColor: Colors.grey,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_bag),
+                  label: 'Products',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Users',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.category),
+                  label: 'Categories',
+                ),
+              ],
+              onTap: (index) {
+                switch (index) {
+                  case 0:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdminScreen()),
+                    );
+                    break;
+                  case 1:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AllProductsScreen()),
+                    );
+                    break;
+                  case 2:
+                    Get.offAll(AllUsersScreen());
+                    break;
+                  case 3:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                    );
+                    break;
+                  case 4:
+                    break;
+                }
+              },
+            ),
           ),
         );
       },

@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, sort_child_properties_last, prefer_const_constructors, unused_local_variable, must_be_immutable, avoid_print, unnecessary_string_interpolations, deprecated_member_use, unused_element, unnecessary_null_comparison
 import 'package:admin_panel/const/app-colors.dart';
+import 'package:admin_panel/screens/admin-profile.dart';
 import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/manage-users.dart';
@@ -12,6 +13,7 @@ import '../screens/all-orders-screen.dart';
 import '../screens/all-products-screen.dart';
 import '../screens/all_categories_screen.dart';
 import '../screens/main-screen.dart';
+import '../screens/select-type.dart';
 import '../utils/constant.dart';
 
 class DrawerAdminWidget extends StatefulWidget {
@@ -232,10 +234,10 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
                   titleAlignment: ListTileTitleAlignment.center,
                   onTap: () {
                     // Get.back();
-                    // Get.to(() => CustomerReviews());
+                    Get.offAll(AdminProfileScreen());
                   },
                   title: Text(
-                    'Customer Reviews',
+                    'Profile',
                     style: TextStyle(color: Colors.white),
                   ),
                   leading: Icon(
@@ -252,7 +254,7 @@ class _DrawerAdminWidgetState extends State<DrawerAdminWidget> {
                     EasyLoading.show();
                     await FirebaseAuth.instance.signOut();
                     // await _googleSignIn.signOut();
-                    Get.offAll(() => MainScreen());
+                    Get.offAll(() => SelectTypeScreen());
                     EasyLoading.dismiss();
                   } else {
                     Get.back();

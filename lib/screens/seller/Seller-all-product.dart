@@ -1,10 +1,15 @@
 import 'dart:io';
+import 'package:admin_panel/controllers/category-dropdown_controller.dart';
 import 'package:admin_panel/screens/add-products-screen.dart';
 import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
 import 'package:admin_panel/screens/edit-product-screen.dart';
 import 'package:admin_panel/screens/product-detail-screen.dart';
+import 'package:admin_panel/screens/seller/profile.dart';
+import 'package:admin_panel/screens/seller/seller-all-categories.dart';
+import 'package:admin_panel/screens/seller/seller-all-user.dart';
+import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,20 +24,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import '../const/app-colors.dart';
-import '../controllers/category-dropdown_controller.dart';
-import '../controllers/is-sale-controller.dart';
-import '../models/product-model.dart';
-import '../utils/AppConstant.dart';
+import '../../const/app-colors.dart';
+import '../../controllers/is-sale-controller.dart';
+import '../../models/product-model.dart';
+import '../../utils/AppConstant.dart';
 
-class AllProductsScreen extends StatefulWidget {
-  const AllProductsScreen({super.key});
+class SellerAllProductScreen extends StatefulWidget {
+  const SellerAllProductScreen({super.key});
 
   @override
-  State<AllProductsScreen> createState() => _AllProductsScreenState();
+  State<SellerAllProductScreen> createState() => _SellerAllProductScreenState();
 }
 
-class _AllProductsScreenState extends State<AllProductsScreen> {
+class _SellerAllProductScreenState extends State<SellerAllProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +47,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Get.offAll(SellerHomeScreen());
           },
         ),
         title: Text("All Products", style: TextStyle(color: Colors.white)),
@@ -52,7 +56,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
             onTap: () => Get.to(() => AddProductScreen()),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Icon(Icons.add , color: Colors.white,),
+              // child: Icon(Icons.add , color: Colors.white,),
             ),
           ),
           IconButton(
@@ -233,33 +237,37 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
                 icon: Icon(Icons.category),
                 label: 'Categories',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle),
+                label: 'Profile',
+              ),
             ],
             onTap: (index) {
               switch (index) {
                 case 0:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AdminScreen()),
+                    MaterialPageRoute(builder: (context) => SellerHomeScreen()),
                   );
                   break;
                 case 1:
                   // Handle the Wishlist item tap
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
+                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
                   break;
                 case 2:
                   // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
+                  Get.offAll(SellerAllUsersScreen());
                   break;
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                    MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
                   );
                   break;
                 case 4:
                   // Handle the Profile item tap
-                  // Get.offAll();
+                  Get.offAll(ProfileScreen());
                   break;
               }
             },

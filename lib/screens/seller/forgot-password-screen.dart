@@ -41,6 +41,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         appBar: AppBar(
           backgroundColor: AppColor().colorRed,
           title: const Text('Forgot Password'),
+          leading: IconButton(icon: Icon(Icons.arrow_back),onPressed: (){
+            Navigator.pop(context);
+          },),
         ),
         body: Center(
           child: Column(

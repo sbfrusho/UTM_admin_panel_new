@@ -1,3 +1,4 @@
+import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/select-type.dart';
 import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +10,12 @@ import 'package:flutter/widgets.dart';
 import '../../const/app-colors.dart';
 
 
-class ProfileScreen extends StatefulWidget {
+class AdminProfileScreen extends StatefulWidget {
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _AdminProfileScreenState createState() => _AdminProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _AdminProfileScreenState extends State<AdminProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -50,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Get.offAll(SellerHomeScreen());
+            Get.offAll(AdminScreen());
           },
         ),
         actions: [
@@ -82,14 +83,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ProfileDetail(
                     label: 'Phone:',
                     value: userData!['phone'],
-                  ),
-                  ProfileDetail(
-                    label: 'Admin:',
-                    value: userData!['isAdmin'].toString(),
-                  ),
-                  ProfileDetail(
-                    label: 'Active:',
-                    value: userData!['isActive'].toString(),
                   ),
                   ProfileDetail(
                     label: 'Created On:',

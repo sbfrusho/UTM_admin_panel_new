@@ -24,6 +24,15 @@ class OrderDetails extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: AppColor().colorRed,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Container(
         color: AppColor().backgroundColor,
@@ -104,10 +113,6 @@ class OrderDetails extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
               ),
             ],
             onTap: (index) {

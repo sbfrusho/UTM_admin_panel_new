@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/Seller-all-product.dart';
 import 'package:admin_panel/screens/seller/profile.dart';
+import 'package:admin_panel/screens/seller/seller-all-categories.dart';
+import 'package:admin_panel/screens/seller/seller-all-user.dart';
 import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:admin_panel/const/app-colors.dart';
@@ -13,7 +17,34 @@ import 'package:admin_panel/screens/all-orders-screen.dart';
 import 'package:admin_panel/widgets/drawer-widget-admin.dart';
 import 'package:get/get.dart';
 
-class SellerHomeScreen extends StatelessWidget {
+class SellerHomeScreen extends StatefulWidget {
+  @override
+  State<SellerHomeScreen> createState() => _SellerHomeScreenState();
+}
+
+class _SellerHomeScreenState extends State<SellerHomeScreen> {
+  int userCount = 0;
+
+  int orderCount = 0;
+
+  int productCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCounts();
+  }
+
+  Future<void> fetchCounts() async {
+    final orderSnapshot = await FirebaseFirestore.instance.collection('orders').get();
+    final productSnapshot = await FirebaseFirestore.instance.collection('products').get();
+
+    setState(() {
+      orderCount = orderSnapshot.size;
+      productCount = productSnapshot.size;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,6 +62,7 @@ class SellerHomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // _buildLineChart(),
+            _buildInfoCard(),
             SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -39,7 +71,7 @@ class SellerHomeScreen extends StatelessWidget {
                   context,
                   'Orders List',
                   Icons.list,
-                  SellerAllOrdersScreen(),
+                  SellerAllOrderScreen(),
                 ),
               ],
             ),
@@ -51,13 +83,13 @@ class SellerHomeScreen extends StatelessWidget {
                   context,
                   'Categories List',
                   Icons.category,
-                  AllCategoriesScreen(),
+                  SellerCategoriesScreen(),
                 ),
                 _buildAdminButton(
                   context,
                   'Products List',
                   Icons.shopping_bag,
-                  AllProductsScreen(),
+                  SellerAllProductScreen(),
                 ),
               ],
             ),
@@ -112,16 +144,16 @@ class SellerHomeScreen extends StatelessWidget {
                 case 1:
                   // Handle the Wishlist item tap
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
+                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
                   break;
                 case 2:
                   // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
+                  Get.offAll(SellerAllUsersScreen());
                   break;
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                    MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
                   );
                   break;
                 case 4:
@@ -191,6 +223,58 @@ class SellerHomeScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoCard() {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Information',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          _buildInfoRow('Orders', orderCount, Icons.list),
+          SizedBox(height: 8),
+          _buildInfoRow('Products', productCount, Icons.shopping_bag),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, int count, IconData icon) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 24),
+            SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        Text(
+          count.toString(),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ],
     );
   }
 

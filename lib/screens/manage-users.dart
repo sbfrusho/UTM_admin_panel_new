@@ -16,8 +16,14 @@ class ManageUsers extends StatelessWidget {
       appBar: AppBar(
         title: Text('All Users' , style: TextStyle(color: Colors.white),),
         backgroundColor: AppColor().colorRed,
-        leading: IconButton(icon: Icon(Icons.arrow_back),
-        onPressed: () => Get.offAll(AdminScreen()),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Get.offAll(AdminScreen());
+          },
         ),
       ),
       body: Container(
@@ -82,10 +88,6 @@ class ManageUsers extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
               ),
             ],
             onTap: (index) {

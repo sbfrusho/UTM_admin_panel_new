@@ -2,6 +2,7 @@
 
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/main-screen.dart';
+import 'package:admin_panel/screens/select-type.dart';
 import 'package:admin_panel/screens/seller/forgot-password-screen.dart';
 import 'package:admin_panel/screens/seller/seller-register-screen.dart';
 import 'package:flutter/material.dart';
@@ -34,19 +35,27 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: AppColor().colorRed,
         title: Text('Sign In', style: TextStyle(color: Colors.white)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
-            Get.offAll(MainScreen());
+            Get.offAll(SelectTypeScreen());
           },
         ),
       ),
       body: Container(
-        color: AppColor().backgroundColor,
+        color: Colors.white,
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: [
               // Image.asset('assets/logo_image.png'),
+              Image.asset(
+              "assets/For Design Picture/seller.jpg",
+              height: MediaQuery.of(context).size.height * .5,
+              width: MediaQuery.of(context).size.width,
+            ),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),

@@ -28,9 +28,15 @@ class AllCategoriesScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColor().colorRed,
         title: const Text("All Categories" , style: TextStyle(color: Colors.white),),
-        leading: IconButton(icon: Icon(Icons.arrow_back , color: Colors.white,),onPressed: (){
-          Get.offAll(AdminScreen());
-        },),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Get.offAll(AdminScreen());
+          },
+        ),
         actions: [
           InkWell(
             onTap: () => Get.to(() => const AddCategoriesScreen()),
@@ -185,10 +191,6 @@ class AllCategoriesScreen extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
               ),
             ],
             onTap: (index) {

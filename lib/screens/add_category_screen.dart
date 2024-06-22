@@ -36,10 +36,14 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
         title: const Text("Add Categories", style: TextStyle(color: Colors.white)),
         backgroundColor: AppColor().colorRed,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
-            Get.back();
-          },),
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -202,10 +206,6 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
               ),
             ],
             onTap: (index) {

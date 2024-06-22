@@ -3,11 +3,11 @@
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/controllers/edit-category.dart';
 import 'package:admin_panel/models/categories_model.dart';
-import 'package:admin_panel/screens/admin-screen.dart';
-import 'package:admin_panel/screens/all-products-screen.dart';
-import 'package:admin_panel/screens/all-users-screen.dart';
-import 'package:admin_panel/screens/all_categories_screen.dart';
-import 'package:admin_panel/utils/constant.dart';
+import 'package:admin_panel/screens/seller/Seller-all-product.dart';
+import 'package:admin_panel/screens/seller/profile.dart';
+import 'package:admin_panel/screens/seller/seller-all-categories.dart';
+import 'package:admin_panel/screens/seller/seller-all-user.dart';
+import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,15 +15,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
-class EditCategoryScreen extends StatefulWidget {
+class SellerEditCategoryScreen extends StatefulWidget {
   CategoriesModel categoriesModel;
-  EditCategoryScreen({super.key, required this.categoriesModel});
+  SellerEditCategoryScreen({super.key, required this.categoriesModel});
 
   @override
-  State<EditCategoryScreen> createState() => _EditCategoryScreenState();
+  State<SellerEditCategoryScreen> createState() => _SellerEditCategoryScreenState();
 }
 
-class _EditCategoryScreenState extends State<EditCategoryScreen> {
+class _SellerEditCategoryScreenState extends State<SellerEditCategoryScreen> {
   TextEditingController categoryNameController = TextEditingController();
 
   @override
@@ -39,7 +39,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
         backgroundColor: AppColor().colorRed,
         title: Text(widget.categoriesModel.categoryName , style: TextStyle(color: Colors.white),),
         leading: IconButton(icon: Icon(Icons.arrow_back),onPressed: (){
-          Get.offAll(AllCategoriesScreen());
+          Get.offAll(SellerCategoriesScreen());
         },),
         
       ),
@@ -133,7 +133,10 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                 
 
                 EasyLoading.dismiss();
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>AllCategoriesScreen()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
+                );
               },
               child: const Text("Update"),
             )
@@ -171,33 +174,38 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                 icon: Icon(Icons.category),
                 label: 'Categories',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.man),
+                label: 'Profile',
+              ),
+
             ],
             onTap: (index) {
               switch (index) {
                 case 0:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AdminScreen()),
+                    MaterialPageRoute(builder: (context) => SellerHomeScreen()),
                   );
                   break;
                 case 1:
                   // Handle the Wishlist item tap
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
+                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
                   break;
                 case 2:
                   // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
+                  Get.offAll(SellerAllUsersScreen());
                   break;
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                    MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
                   );
                   break;
                 case 4:
                   // Handle the Profile item tap
-                  // Get.offAll();
+                  Get.offAll(ProfileScreen());
                   break;
               }
             },

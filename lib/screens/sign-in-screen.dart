@@ -40,12 +40,18 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
       body: Container(
-        color: AppColor().backgroundColor,
+        
+        color: Colors.white,
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: ListView(
             children: [
               // Image.asset('assets/logo_image.png'),
+              Image.asset(
+              "assets/For Design Picture/admin.png",
+              height: MediaQuery.of(context).size.height * .5,
+              width: MediaQuery.of(context).size.width,
+            ),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: 'Email'),

@@ -42,13 +42,16 @@ class AddProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Products"),
-        backgroundColor: AppConstant.colorRed,
+        backgroundColor: AppColor().colorRed,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: ()=>Get.offAll(AdminScreen()),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        
-        
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -108,8 +111,7 @@ class AddProductScreen extends StatelessWidget {
                                             .selectedIamges.length);
                                       },
                                       child: CircleAvatar(
-                                        backgroundColor:
-                                            AppConstant.colorRed,
+                                        backgroundColor: AppConstant.colorRed,
                                         child: Icon(
                                           Icons.close,
                                           color: AppConstant.colorWhite,
@@ -278,6 +280,7 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
+                  
                   cursorColor: AppConstant.colorRed,
                   textInputAction: TextInputAction.next,
                   controller: quantityController,
@@ -292,6 +295,7 @@ class AddProductScreen extends StatelessWidget {
                         Radius.circular(10.0),
                       ),
                     ),
+                    
                   ),
                 ),
               ),
@@ -353,70 +357,68 @@ class AddProductScreen extends StatelessWidget {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-        // sets the background color of the `BottomNavigationBar`
-        canvasColor: AppColor().colorRed,
-        // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-        primaryColor: Colors.red,
-        textTheme: Theme
-            .of(context)
-            .textTheme
-            .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
+            // sets the background color of the `BottomNavigationBar`
+            canvasColor: AppColor().colorRed,
+            // sets the active color of the `BottomNavigationBar` if `Brightness` is light
+            primaryColor: Colors.red,
+            textTheme: Theme.of(context)
+                .textTheme
+                .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
         child: BottomNavigationBar(
-            currentIndex: 0,
-            selectedItemColor: Colors.red,
-            unselectedItemColor: Colors.grey,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Products',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Users',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.category),
-                label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
-              ),
-            ],
-            onTap: (index) {
-              switch (index) {
-                case 0:
-                  Navigator.push(
+          currentIndex: 0,
+          selectedItemColor: Colors.red,
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag),
+              label: 'Products',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Users',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'Categories',
+            ),
+          ],
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminScreen()),
+                );
+                break;
+              case 1:
+                // Handle the Wishlist item tap
+                Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AdminScreen()),
-                  );
-                  break;
-                case 1:
-                  // Handle the Wishlist item tap
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
-                  break;
-                case 2:
-                  // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
-                  break;
-                case 3:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
-                  );
-                  break;
-                case 4:
-                  // Handle the Profile item tap
-                  // Get.offAll();
-                  break;
-              }
-            },
-          ),
+                    MaterialPageRoute(
+                        builder: (context) => AllProductsScreen()));
+                break;
+              case 2:
+                // Handle the Categories item tap
+                Get.offAll(AllUsersScreen());
+                break;
+              case 3:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AllCategoriesScreen()),
+                );
+                break;
+              case 4:
+                // Handle the Profile item tap
+                // Get.offAll();
+                break;
+            }
+          },
+        ),
       ),
     );
   }

@@ -21,6 +21,15 @@ class CheckSingleOrderScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppConstant.colorRed,
         title: Text('Order'),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection('orders').doc(docId).collection('items').doc(docId).get(),

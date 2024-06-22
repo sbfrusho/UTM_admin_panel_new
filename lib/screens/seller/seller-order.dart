@@ -1,28 +1,37 @@
+import 'dart:io';
+
 import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/Seller-all-product.dart';
+import 'package:admin_panel/screens/seller/profile.dart';
+import 'package:admin_panel/screens/seller/seller-all-categories.dart';
+import 'package:admin_panel/screens/seller/seller-all-user.dart';
 import 'package:admin_panel/screens/seller/seller-home-screen.dart';
+import 'package:admin_panel/screens/seller/seller-order-item.dart';
 import 'package:admin_panel/screens/single-order-items.dart';
 import 'package:admin_panel/utils/AppConstant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:pdf/widgets.dart' as pw;
+import 'package:permission_handler/permission_handler.dart';
 import '../../const/app-colors.dart';
+import '../../models/order-model-2.dart';
 
-class SellerAllOrdersScreen extends StatefulWidget {
-  const SellerAllOrdersScreen({Key? key}) : super(key: key);
+class SellerAllOrderScreen extends StatefulWidget {
+  const SellerAllOrderScreen({Key? key}) : super(key: key);
 
   @override
-  _SellerAllOrdersScreenState createState() => _SellerAllOrdersScreenState();
+  _SellerAllOrderScreenState createState() => _SellerAllOrderScreenState();
 }
 
-class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
+class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
   late Future<QuerySnapshot> _ordersFuture;
   String _selectedStatus = 'All';
-  final List<String> _statusOptions = ['All', 'pending', 'accepted', 'declined'];
+  final List<String> _statusOptions = ['All', 'accepted', 'declined','in progress'];
 
   @override
   void initState() {
@@ -83,6 +92,7 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
         ),
         backgroundColor: AppColor().colorRed,
         actions: [
+
           IconButton(
             icon: Icon(Icons.search , color: Colors.white,),
             onPressed: () {
@@ -132,6 +142,17 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
               );
             },
           ),
+          // IconButton(
+          //   // icon: Icon(Icons.print , color: Colors.white,),
+          //   onPressed: () async {
+          //     try {
+          //       await _downloadProductsListAsPdf(context);
+          //     } catch (e) {
+          //       print('Error downloading product list: $e');
+          //       _showErrorDialog(context, 'Error downloading product list: $e');
+          //     }
+          //   },
+          // ),
         ],
       ),
       body: Container(
@@ -172,7 +193,7 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                 return Card(
                   elevation: 5,
                   child: ListTile(
-                    onTap: () => Get.offAll(OrderItemsScreen(orderId: data.id)),
+                    onTap: () => Get.offAll(SellerOrderItem(orderId: data.id)),
                     leading: CircleAvatar(
                       backgroundColor: AppConstant.colorRed,
                       child: Text(data['customerName'][0]),
@@ -181,15 +202,18 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Phone: ${data['customerPhone']}'),
-                            Text('Address: ${data['customerAddress']}'),
-                            Text('Total Price: ${data['totalPrice']} RM'),
-                            Text('Delivery Time: ${data['deliveryTime']}'),
-                            Text('Status: ${data['status']}'),
-                          ],
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Phone: ${data['customerPhone']}'),
+                              Text('Address: ${data['customerAddress']}'),
+                              Text('Total Price: ${data['totalPrice']} RM'),
+                              Text('Delivery Time: ${data['deliveryTime']}'),
+                              Text('Status: ${data['status']}'),
+                            ],
+                          ),
                         ),
                         Column(
                           children: [
@@ -211,7 +235,7 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order accepted successfully'),
+                                              content: Text('Order accepted '),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -244,7 +268,7 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order declined successfully'),
+                                              content: Text('Order declined '),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -272,11 +296,11 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                                           await FirebaseFirestore.instance
                                               .collection('orders')
                                               .doc(data.id)
-                                              .update({'status': 'pending'});
+                                              .update({'status': 'in progress'});
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order pending successfully'),
+                                              content: Text('Order in progress'),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -292,7 +316,7 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                                           );
                                         }
                                       },
-                                      child: Text('Pending'),
+                                      child: Text('In progress'),
                                     ),
                                     // ElevatedButton(
                                     //   style: ElevatedButton.styleFrom(
@@ -309,7 +333,7 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                                     //       // Show a success message
                                     //       ScaffoldMessenger.of(context).showSnackBar(
                                     //         SnackBar(
-                                    //           content: Text('Order rejected successfully'),
+                                    //           content: Text('Order rejected '),
                                     //         ),
                                     //       );
 
@@ -345,11 +369,10 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-        
         // sets the background color of the `BottomNavigationBar`
         canvasColor: AppColor().colorRed,
         // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-        // primaryColor: Colors.red,
+        primaryColor: Colors.red,
         textTheme: Theme
             .of(context)
             .textTheme
@@ -391,27 +414,139 @@ class _SellerAllOrdersScreenState extends State<SellerAllOrdersScreen> {
                 case 1:
                   // Handle the Wishlist item tap
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
+                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
                   break;
                 case 2:
                   // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
+                  Get.offAll(SellerAllUsersScreen());
                   break;
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                    MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
                   );
                   break;
                 case 4:
                   // Handle the Profile item tap
-                  // Get.offAll();
+                  Get.offAll(ProfileScreen());
                   break;
               }
             },
           ),
       ),
-
     );
   }
+
+Future<void> _downloadProductsListAsPdf(BuildContext context) async {
+  try {
+    // Request storage permissions
+    if (!await _requestPermissions()) {
+      throw Exception('Storage permissions not granted');
+    }
+
+    final querySnapshot = await FirebaseFirestore.instance.collection('orders').get();
+    final orders = querySnapshot.docs.map((doc) => OrderModel2.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+    // Create a PDF document
+    final pdf = pw.Document();
+
+    // Add a page to the PDF
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              var order = orders[index];
+              return pw.Padding(
+                padding: const pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Customer Name: ${order.customerName}'),
+                    pw.Text('Customer Phone: ${order.customerPhone}'),
+                    pw.Text('Customer Address: ${order.customerAddress}'),
+                    pw.Text('Payment Method: ${order.paymentMethod}'),
+                    pw.Text('Delivery Time: ${order.deliveryTime}'),
+                    pw.Text('Total Price: ${order.totalPrice}'),
+                    pw.Text('Status: ${order.status}'),
+                    pw.Text('Created At: ${order.createdAt}'),
+                    pw.Text('Unique ID: ${order.uniqueId}'),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+
+    // Get the directory to save the file
+    final directory = Directory('/storage/emulated/0/Download');
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
+    final path = '${directory.path}/orders.pdf';
+    final file = File(path);
+
+    // Write the PDF data to the file
+    await file.writeAsBytes(await pdf.save());
+
+    print("This is the path file: $file");
+
+    // Show a confirmation dialog
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Download Complete'),
+          content: Text('The product list has been saved to $path'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (e) {
+    print('Error during downloading process: $e');
+    _showErrorDialog(context, 'Failed to download product list: $e');
+  }
 }
+
+Future<bool> _requestPermissions() async {
+  final status = await Permission.storage.request();
+  if (status.isGranted) {
+    return true;
+  } else {
+    // Open app settings if permission is permanently denied
+    if (await Permission.storage.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+    return false;
+  }
+}
+
+void _showErrorDialog(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}}

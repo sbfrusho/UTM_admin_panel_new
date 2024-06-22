@@ -5,17 +5,19 @@ import 'package:admin_panel/screens/all-orders-screen.dart';
 import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/seller-all-user.dart';
+import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/order-service.dart';
-import '../models/order-items-model.dart';
+import '../../controllers/order-service.dart';
+import '../../models/order-items-model.dart';
 
-class OrderItemsScreen extends StatelessWidget {
+class SellerOrderItem extends StatelessWidget {
   final String orderId;
   final OrderService orderService = OrderService();
 
-  OrderItemsScreen({required this.orderId});
+  SellerOrderItem({required this.orderId});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class OrderItemsScreen extends StatelessWidget {
             color: Colors.white,
           ),
           onPressed: () {
-            Get.offAll(AllOrdersScreen());
+            Get.offAll(SellerAllOrderScreen());
           },
         ),
       ),
@@ -123,7 +125,7 @@ class OrderItemsScreen extends StatelessWidget {
                   break;
                 case 2:
                   // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
+                  Get.offAll(SellerAllUsersScreen());
                   break;
                 case 3:
                   Navigator.push(

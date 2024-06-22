@@ -23,6 +23,15 @@ class SingleProductDetailScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColor().colorRed,
         title: Text(productModel.productName , style: TextStyle(color: Colors.white),),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Container(
         child: Column(
@@ -155,10 +164,6 @@ class SingleProductDetailScreen extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
               ),
             ],
             onTap: (index) {

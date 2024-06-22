@@ -2,6 +2,7 @@
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/select-type.dart';
+import 'package:admin_panel/screens/seller/seller-all-categories.dart';
 import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:admin_panel/screens/seller/seller-sign-in-screen.dart';
@@ -163,7 +164,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ListTile(
                 onTap: () {
-                  Get.to(() => SellerAllOrdersScreen());
+                  Get.to(() => SellerAllOrderScreen());
                 },
                 title: Text(
                   'Orders',
@@ -199,7 +200,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 onTap: () async {
                   Get.back();
 
-                  Get.to(() => AllCategoriesScreen());
+                  Get.to(() => SellerCategoriesScreen());
                 },
                 title: Text(
                   'Categories',

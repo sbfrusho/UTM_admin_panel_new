@@ -3,6 +3,10 @@ import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/Seller-all-product.dart';
+import 'package:admin_panel/screens/seller/profile.dart';
+import 'package:admin_panel/screens/seller/seller-all-categories.dart';
+import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +15,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-class AllUsersScreen extends StatelessWidget {
+class SellerAllUsersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +28,7 @@ class AllUsersScreen extends StatelessWidget {
             color: Colors.white,
           ),
           onPressed: () {
-            Get.offAll(AdminScreen());
+            Get.offAll(SellerHomeScreen());
           },
         ),
         actions: [
@@ -108,27 +112,27 @@ class AllUsersScreen extends StatelessWidget {
                 case 0:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AdminScreen()),
+                    MaterialPageRoute(builder: (context) => SellerHomeScreen()),
                   );
                   break;
                 case 1:
                   // Handle the Wishlist item tap
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()));
+                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
                   break;
                 case 2:
                   // Handle the Categories item tap
-                  Get.offAll(AllUsersScreen());
+                  Get.offAll(SellerAllUsersScreen());
                   break;
                 case 3:
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                    MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
                   );
                   break;
                 case 4:
                   // Handle the Profile item tap
-                  // Get.offAll();
+                  Get.offAll(ProfileScreen());
                   break;
               }
             },

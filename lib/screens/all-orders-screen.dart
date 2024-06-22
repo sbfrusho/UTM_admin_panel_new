@@ -14,7 +14,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
 import '../const/app-colors.dart';
 import '../models/order-model-2.dart';
-import '../models/order-model.dart';
 
 class AllOrdersScreen extends StatefulWidget {
   const AllOrdersScreen({Key? key}) : super(key: key);
@@ -78,7 +77,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Get.offAll(AdminScreen());
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>AdminScreen()));
           },
         ),
         title: Text(
@@ -392,10 +391,6 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
               ),
             ],
             onTap: (index) {

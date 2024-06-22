@@ -2,6 +2,7 @@ import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-orders-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/select-type.dart';
+import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
