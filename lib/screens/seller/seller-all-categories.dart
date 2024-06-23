@@ -47,10 +47,10 @@ class SellerCategoriesScreen extends StatelessWidget {
             onTap: () => Get.to(() => const AddCategoriesScreen()),
             child: const Padding(
               padding: EdgeInsets.all(8.0),
-              // child: Icon(
-              //   Icons.add,
-              //   color: Colors.white,
-              // ),
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -178,7 +178,7 @@ class SellerCategoriesScreen extends StatelessWidget {
                 .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
         child: BottomNavigationBar(
           currentIndex: 0,
-          selectedItemColor: Colors.red,
+          // selectedItemColor: Colors.red,
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(

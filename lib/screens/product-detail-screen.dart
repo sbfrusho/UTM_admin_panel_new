@@ -115,6 +115,23 @@ class SingleProductDetailScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Text("Added by"),
+                        Container(
+                          width: Get.width / 2,
+                          child: Text(
+                            productModel.email,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Text("Is Sale?"),
                         Container(
                           width: Get.width / 2,

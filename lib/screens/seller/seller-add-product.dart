@@ -7,6 +7,7 @@ import 'package:admin_panel/screens/admin-screen.dart';
 import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/Seller-all-product.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,14 +15,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import '../controllers/category-dropdown_controller.dart';
-import '../controllers/is-sale-controller.dart';
-import '../controllers/products-images-controller.dart';
-import '../services/generate-ids-service.dart';
-import '../widgets/dropdown-categories-widget.dart';
 
-class AddProductScreen extends StatelessWidget {
-  AddProductScreen({super.key});
+import '../../controllers/category-dropdown_controller.dart';
+import '../../controllers/is-sale-controller.dart';
+import '../../controllers/products-images-controller.dart';
+import '../../services/generate-ids-service.dart';
+import '../../widgets/dropdown-categories-widget.dart';
+
+class SellerAddProductScreen extends StatelessWidget {
+  SellerAddProductScreen({super.key});
 
   AddProductImagesController addProductImagesController =
       Get.put(AddProductImagesController());
@@ -51,7 +53,7 @@ class AddProductScreen extends StatelessWidget {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Get.offAll(SellerAllProductScreen());
           },
         ),
       ),
@@ -348,7 +350,7 @@ class AddProductScreen extends StatelessWidget {
                     deliveryTimeController.clear();
                     productDescriptionController.clear();
                     EasyLoading.dismiss();
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductsScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SellerAllProductScreen()));
                   } catch (e) {
                     print("error : $e");
                   }

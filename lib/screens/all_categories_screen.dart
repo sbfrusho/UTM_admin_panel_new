@@ -97,37 +97,40 @@ class AllCategoriesScreen extends StatelessWidget {
                   /// this key is necessary
                   trailingActions: <SwipeAction>[
                     SwipeAction(
-                        title: "Delete",
-                        onTap: (CompletionHandler handler) async {
-                          await Get.defaultDialog(
-                            title: "Delete Product",
-                            content: const Text(
-                                "Are you sure you want to delete this product?"),
-                            textCancel: "Cancel",
-                            textConfirm: "Delete",
-                            contentPadding: const EdgeInsets.all(10.0),
-                            confirmTextColor: Colors.white,
-                            onCancel: () {},
-                            onConfirm: () async {
-                              Get.back(); // Close the dialog
-                              EasyLoading.show(status: 'Please wait..');
+                      title: "Delete",
+                      onTap: (CompletionHandler handler) async {
+                        await Get.defaultDialog(
+                          title: "Delete Category",
+                          content: const Text(
+                              "Are you sure you want to delete this category?"),
+                          textCancel: "Cancel",
+                          textConfirm: "Delete",
+                          contentPadding: const EdgeInsets.all(10.0),
+                          confirmTextColor: Colors.white,
+                          onCancel: () {},
+                          onConfirm: () async {
+                            Get.back(); // Close the dialog
+                            EasyLoading.show(status: 'Please wait..');
 
-                              // await deleteImagesFromFirebase(
-                              //   productModel.productImages,
-                              // );
-
-                              // await FirebaseFirestore.instance
-                              //     .collection('products')
-                              //     .doc(productModel.productId)
-                              //     .delete();
-
+                            // Deleting the category image from Firebase Storage
+                            // You can create a helper function to handle this part
+                            try {
+                              await FirebaseFirestore.instance
+                                  .collection('categories')
+                                  .doc(categoriesModel.categoryId)
+                                  .delete();
                               EasyLoading.dismiss();
-                            },
-                            buttonColor: Colors.red,
-                            cancelTextColor: Colors.black,
-                          );
-                        },
-                        color: Colors.red),
+                            } catch (e) {
+                              EasyLoading.dismiss();
+                              print('Error deleting category: $e');
+                            }
+                          },
+                          buttonColor: Colors.red,
+                          cancelTextColor: Colors.black,
+                        );
+                      },
+                      color: Colors.red,
+                    ),
                   ],
                   child: Card(
                     elevation: 5,

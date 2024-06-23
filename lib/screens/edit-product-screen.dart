@@ -11,6 +11,7 @@ import 'package:admin_panel/screens/all_categories_screen.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -36,6 +37,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   TextEditingController deliveryTimeController = TextEditingController();
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     super.initState();
@@ -406,6 +408,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         createdAt: widget.productModel.createdAt,
                         updatedAt: DateTime.now(),
                         quantity: quantityController.text.trim(),
+                        email: user!.email.toString(),
                       );
 
                       await FirebaseFirestore.instance

@@ -168,6 +168,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                       .set(categoriesModel.toJson());
 
                   EasyLoading.dismiss();
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllCategoriesScreen()));
                 },
                 child: Text("Save"),
               )

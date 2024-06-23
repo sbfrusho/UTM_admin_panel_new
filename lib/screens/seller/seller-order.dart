@@ -203,7 +203,7 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.4,
+                          width: MediaQuery.of(context).size.width * 0.35,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
