@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_const_constructors, must_be_immutable, sized_box_for_whitespace, prefer_is_empty, avoid_print, await_only_futures
-
 import 'dart:io';
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/models/product-model.dart';
@@ -9,7 +7,6 @@ import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
 import 'package:admin_panel/screens/seller/Seller-all-product.dart';
 import 'package:admin_panel/utils/constant.dart';
-import 'package:admin_panel/widgets/drawer-widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,13 +19,17 @@ import '../../controllers/products-images-controller.dart';
 import '../../services/generate-ids-service.dart';
 import '../../widgets/dropdown-categories-widget.dart';
 
-class SellerAddProductScreen extends StatelessWidget {
+class SellerAddProductScreen extends StatefulWidget {
   SellerAddProductScreen({super.key});
 
+  @override
+  _SellerAddProductScreenState createState() => _SellerAddProductScreenState();
+}
+
+class _SellerAddProductScreenState extends State<SellerAddProductScreen> {
   AddProductImagesController addProductImagesController =
       Get.put(AddProductImagesController());
 
-  //
   CategoryDropDownController categoryDropDownController =
       Get.put(CategoryDropDownController());
 
@@ -41,6 +42,9 @@ class SellerAddProductScreen extends StatelessWidget {
   TextEditingController productDescriptionController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   User? user = FirebaseAuth.instance.currentUser;
+  List<String> availableSizes = ["S", "M", "L", "XL"];
+  List<String> selectedSizes = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +82,7 @@ class SellerAddProductScreen extends StatelessWidget {
                 ),
               ),
 
-              //show Images
+              // Show selected images
               GetBuilder<AddProductImagesController>(
                 init: AddProductImagesController(),
                 builder: (imageController) {
@@ -132,10 +136,10 @@ class SellerAddProductScreen extends StatelessWidget {
                 },
               ),
 
-              //show categories drop down
+              // Show categories dropdown
               DropDownCategoriesWiidget(),
 
-              //isSale
+              // Show 'Is Sale' toggle
               GetBuilder<IsSaleController>(
                 init: IsSaleController(),
                 builder: (isSaleController) {
@@ -160,7 +164,8 @@ class SellerAddProductScreen extends StatelessWidget {
                   );
                 },
               ),
-              //form
+
+              // Product details form
               SizedBox(height: 10.0),
               Container(
                 height: 65,
@@ -284,7 +289,6 @@ class SellerAddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  
                   cursorColor: AppConstant.colorRed,
                   textInputAction: TextInputAction.next,
                   controller: quantityController,
@@ -299,36 +303,71 @@ class SellerAddProductScreen extends StatelessWidget {
                         Radius.circular(10.0),
                       ),
                     ),
-                    
                   ),
                 ),
               ),
 
+              // Select sizes checkboxes
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Select Sizes"),
+                    Wrap(
+                      children: availableSizes.map((size) {
+                        return CheckboxListTile(
+                          title: Text(size),
+                          value: selectedSizes.contains(size),
+                          onChanged: (bool? value) {
+                            if (value != null) {
+                              setState(() {
+                                if (value) {
+                                  selectedSizes.add(size); // Add size if checked
+                                } else {
+                                  selectedSizes.remove(size); // Remove size if unchecked
+                                }
+                              });
+                            }
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Upload button
               ElevatedButton(
                 onPressed: () async {
-                  // print(productId);
-
                   try {
                     EasyLoading.show();
+
+                    // Upload selected images
                     await addProductImagesController.uploadFunction(
                         addProductImagesController.selectedIamges);
                     print(addProductImagesController.arrImagesUrl);
 
-                    String productId = await GenerateIds().generateProductId();
+                    // Generate product ID
+                    String productId =
+                        await GenerateIds().generateProductId();
 
+                    // Create ProductModel object
                     ProductModel productModel = ProductModel(
                       productId: productId,
-                      categoryId: categoryDropDownController.selectedCategoryId
-                          .toString(),
+                      categoryId:
+                          categoryDropDownController.selectedCategoryId
+                              .toString(),
                       productName: productNameController.text.trim(),
                       categoryName: categoryDropDownController
                           .selectedCategoryName
                           .toString(),
-                      salePrice: salePriceController.text != ''
+                      salePrice: salePriceController.text.isNotEmpty
                           ? salePriceController.text.trim()
                           : '',
                       fullPrice: fullPriceController.text.trim(),
-                      productImages: addProductImagesController.arrImagesUrl,
+                      productImages:
+                          addProductImagesController.arrImagesUrl,
                       deliveryTime: deliveryTimeController.text.trim(),
                       isSale: isSaleController.isSale.value,
                       productDescription:
@@ -337,39 +376,48 @@ class SellerAddProductScreen extends StatelessWidget {
                       updatedAt: DateTime.now(),
                       quantity: quantityController.text.trim(),
                       email: user!.email.toString(),
+                      productSizes: selectedSizes,
                     );
 
+                    // Save product data to Firestore
                     await FirebaseFirestore.instance
                         .collection('products')
                         .doc(productId)
                         .set(productModel.toMap());
 
+                    // Clear text fields and dismiss loading indicator
                     productNameController.clear();
                     salePriceController.clear();
                     fullPriceController.clear();
                     deliveryTimeController.clear();
                     productDescriptionController.clear();
                     EasyLoading.dismiss();
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SellerAllProductScreen()));
+
+                    // Navigate to SellerAllProductScreen after successful upload
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SellerAllProductScreen(),
+                      ),
+                    );
                   } catch (e) {
-                    print("error : $e");
+                    print("Error: $e");
                   }
                 },
                 child: Text("Upload"),
-              )
+              ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-            // sets the background color of the `BottomNavigationBar`
-            canvasColor: AppColor().colorRed,
-            // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-            primaryColor: Colors.red,
-            textTheme: Theme.of(context)
-                .textTheme
-                .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
+          canvasColor: AppColor().colorRed,
+          primaryColor: Colors.red,
+          textTheme: Theme.of(context)
+              .textTheme
+              .copyWith(bodySmall: TextStyle(color: Colors.yellow)),
+        ),
         child: BottomNavigationBar(
           currentIndex: 0,
           selectedItemColor: Colors.red,
@@ -401,14 +449,12 @@ class SellerAddProductScreen extends StatelessWidget {
                 );
                 break;
               case 1:
-                // Handle the Wishlist item tap
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => AllProductsScreen()));
                 break;
               case 2:
-                // Handle the Categories item tap
                 Get.offAll(AllUsersScreen());
                 break;
               case 3:
@@ -417,10 +463,6 @@ class SellerAddProductScreen extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => AllCategoriesScreen()),
                 );
-                break;
-              case 4:
-                // Handle the Profile item tap
-                // Get.offAll();
                 break;
             }
           },

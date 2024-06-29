@@ -47,10 +47,10 @@ class SellerCategoriesScreen extends StatelessWidget {
             onTap: () => Get.to(() => const AddCategoriesScreen()),
             child: const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
+              // child: Icon(
+              //   Icons.add,
+              //   color: Colors.white,
+              // ),
             ),
           ),
         ],

@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, must_be_immutable, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, unused_import
-
 import 'dart:io';
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/controllers/edit-product-controller.dart';
@@ -21,24 +19,27 @@ import '../../controllers/category-dropdown_controller.dart';
 import '../../controllers/is-sale-controller.dart';
 
 class SellerEditProductScreen extends StatefulWidget {
-  ProductModel productModel;
-  SellerEditProductScreen({super.key, required this.productModel});
+  final ProductModel productModel;
+
+  SellerEditProductScreen({Key? key, required this.productModel}) : super(key: key);
 
   @override
   State<SellerEditProductScreen> createState() => _SellerEditProductScreenState();
 }
 
 class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
-  IsSaleController isSaleController = Get.put(IsSaleController());
-  CategoryDropDownController categoryDropDownController =
-      Get.put(CategoryDropDownController());
-  TextEditingController productNameController = TextEditingController();
-  TextEditingController salePriceController = TextEditingController();
-  TextEditingController fullPriceController = TextEditingController();
-  TextEditingController deliveryTimeController = TextEditingController();
-  TextEditingController productDescriptionController = TextEditingController();
-  TextEditingController quantityController = TextEditingController();
-  User? user = FirebaseAuth.instance.currentUser;
+  final IsSaleController isSaleController = Get.put(IsSaleController());
+  final CategoryDropDownController categoryDropDownController = Get.put(CategoryDropDownController());
+  final TextEditingController productNameController = TextEditingController();
+  final TextEditingController salePriceController = TextEditingController();
+  final TextEditingController fullPriceController = TextEditingController();
+  final TextEditingController deliveryTimeController = TextEditingController();
+  final TextEditingController productDescriptionController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  final List<String> availableSizes = ["S", "M", "L", "XL"];
+  final List<String> selectedSizes = [];
 
   @override
   void initState() {
@@ -49,7 +50,7 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
     deliveryTimeController.text = widget.productModel.deliveryTime;
     productDescriptionController.text = widget.productModel.productDescription;
     quantityController.text = widget.productModel.quantity;
-
+    selectedSizes.addAll(widget.productModel.productSizes);
   }
 
   @override
@@ -60,7 +61,7 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppColor().colorRed,
-            title: Text("${widget.productModel.productName.split(' ').first}", style: TextStyle(color: Colors.white),),
+            title: Text(widget.productModel.productName.split(' ').first, style: TextStyle(color: Colors.white)),
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
@@ -82,8 +83,7 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                       child: GridView.builder(
                         itemCount: controller.images.length,
                         physics: const BouncingScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: 2,
                           crossAxisSpacing: 2,
@@ -96,10 +96,8 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                                 fit: BoxFit.contain,
                                 height: Get.height / 5.5,
                                 width: Get.width / 2,
-                                placeholder: (context, url) =>
-                                    Center(child: CupertinoActivityIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
+                                placeholder: (context, url) => Center(child: CupertinoActivityIndicator()),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
                               ),
                               Positioned(
                                 right: 10,
@@ -107,16 +105,12 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                                 child: InkWell(
                                   onTap: () async {
                                     EasyLoading.show();
-                                    await controller.deleteImagesFromStorage(
-                                        controller.images[index].toString());
-                                    await controller.deleteImageFromFireStore(
-                                        controller.images[index].toString(),
-                                        widget.productModel.productId);
+                                    await controller.deleteImagesFromStorage(controller.images[index].toString());
+                                    await controller.deleteImageFromFireStore(controller.images[index].toString(), widget.productModel.productId);
                                     EasyLoading.dismiss();
                                   },
                                   child: CircleAvatar(
-                                    backgroundColor:
-                                        AppConstant.colorRed,
+                                    backgroundColor: AppConstant.colorRed,
                                     child: Icon(
                                       Icons.close,
                                       color: AppConstant.colorWhite,
@@ -144,20 +138,15 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: DropdownButton<String>(
-                                  value: categoriesDropDownController
-                                      .selectedCategoryId?.value,
-                                  items: categoriesDropDownController.categories
-                                      .map((category) {
+                                  value: categoriesDropDownController.selectedCategoryId?.value,
+                                  items: categoriesDropDownController.categories.map((category) {
                                     return DropdownMenuItem<String>(
                                       value: category['categoryId'],
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
                                           CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                              category['categoryImg']
-                                                  .toString(),
-                                            ),
+                                            backgroundImage: NetworkImage(category['categoryImg'].toString()),
                                           ),
                                           const SizedBox(width: 20),
                                           Text(category['categoryName']),
@@ -166,13 +155,9 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                                     );
                                   }).toList(),
                                   onChanged: (String? selectedValue) async {
-                                    categoriesDropDownController
-                                        .setSelectedCategory(selectedValue);
-                                    String? categoryName =
-                                        await categoriesDropDownController
-                                            .getCategoryName(selectedValue);
-                                    categoriesDropDownController
-                                        .setSelectedCategoryName(categoryName);
+                                    categoriesDropDownController.setSelectedCategory(selectedValue);
+                                    String? categoryName = await categoriesDropDownController.getCategoryName(selectedValue);
+                                    categoriesDropDownController.setSelectedCategoryName(categoryName);
                                   },
                                   hint: const Text(
                                     'Select a category',
@@ -215,7 +200,7 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                     },
                   ),
 
-                  // Form
+                  // Form fields
                   SizedBox(height: 10.0),
                   Container(
                     height: 65,
@@ -225,15 +210,11 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                       textInputAction: TextInputAction.next,
                       controller: productNameController,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                         hintText: "Product Name",
                         hintStyle: TextStyle(fontSize: 12.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                     ),
@@ -251,15 +232,11 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                                 textInputAction: TextInputAction.next,
                                 controller: salePriceController,
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 10.0,
-                                  ),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                                   hintText: "Sale Price",
                                   hintStyle: TextStyle(fontSize: 12.0),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
-                                    ),
+                                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
                                   ),
                                 ),
                               ),
@@ -277,15 +254,11 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                       textInputAction: TextInputAction.next,
                       controller: fullPriceController,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                         hintText: "Full Price",
                         hintStyle: TextStyle(fontSize: 12.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                     ),
@@ -300,15 +273,11 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                       textInputAction: TextInputAction.next,
                       controller: deliveryTimeController,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                         hintText: "Delivery Time",
                         hintStyle: TextStyle(fontSize: 12.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                     ),
@@ -323,20 +292,17 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                       textInputAction: TextInputAction.next,
                       controller: productDescriptionController,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                         hintText: "Product Desc",
                         hintStyle: TextStyle(fontSize: 12.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                     ),
                   ),
-                  
+
+                  SizedBox(height: 10.0),
                   Container(
                     height: 65,
                     margin: EdgeInsets.symmetric(horizontal: 10.0),
@@ -345,51 +311,75 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                       textInputAction: TextInputAction.next,
                       controller: quantityController,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
                         hintText: "Quantity",
                         hintStyle: TextStyle(fontSize: 12.0),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                     ),
                   ),
 
+                  // Sizes
+                  Card(
+                    elevation: 10,
+                    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Sizes Available", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 10),
+                          Wrap(
+                            spacing: 10.0,
+                            children: availableSizes.map((size) {
+                              return FilterChip(
+                                selected: selectedSizes.contains(size),
+                                label: Text(size),
+                                onSelected: (bool selected) {
+                                  // setState(() {
+                                  //   if (selected) {
+                                  //     selectedSizes.add(size);
+                                  //   } else {
+                                  //     selectedSizes.remove(size);
+                                  //   }
+                                  // });
+                                  print('Selected Sizes: $selectedSizes');
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Update button
                   ElevatedButton(
                     onPressed: () async {
                       EasyLoading.show();
                       ProductModel newProductModel = ProductModel(
                         productId: widget.productModel.productId,
-                        categoryId: categoryDropDownController
-                            .selectedCategoryId
-                            .toString(),
+                        categoryId: categoryDropDownController.selectedCategoryId.toString(),
                         productName: productNameController.text.trim(),
-                        categoryName: categoryDropDownController
-                            .selectedCategoryName
-                            .toString(),
-                        salePrice: salePriceController.text != ''
-                            ? salePriceController.text.trim()
-                            : '',
+                        categoryName: categoryDropDownController.selectedCategoryName.toString(),
+                        salePrice: salePriceController.text.trim(),
                         fullPrice: fullPriceController.text.trim(),
                         productImages: widget.productModel.productImages,
                         deliveryTime: deliveryTimeController.text.trim(),
                         isSale: isSaleController.isSale.value,
-                        productDescription:
-                            productDescriptionController.text.trim(),
+                        productDescription: productDescriptionController.text.trim(),
                         createdAt: widget.productModel.createdAt,
                         updatedAt: DateTime.now(),
                         quantity: quantityController.text.trim(),
                         email: user!.email.toString(),
+                        productSizes: selectedSizes, // Update with selected sizes
                       );
+                      print('Updated Product Sizes: $selectedSizes');
 
-                      await FirebaseFirestore.instance
-                          .collection('products')
-                          .doc(widget.productModel.productId)
-                          .update(newProductModel.toMap());
+                      await FirebaseFirestore.instance.collection('products').doc(widget.productModel.productId).update(newProductModel.toMap());
 
                       EasyLoading.dismiss();
                       Navigator.push(
@@ -408,8 +398,8 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
               canvasColor: AppColor().colorRed,
               primaryColor: Colors.red,
               textTheme: Theme.of(context).textTheme.copyWith(
-                bodySmall: TextStyle(color: Colors.yellow),
-              ),
+                    bodySmall: TextStyle(color: Colors.yellow),
+                  ),
             ),
             child: BottomNavigationBar(
               currentIndex: 0,
@@ -455,8 +445,6 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                       context,
                       MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
                     );
-                    break;
-                  case 4:
                     break;
                 }
               },

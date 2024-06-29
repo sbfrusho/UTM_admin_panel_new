@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, prefer_const_constructors, must_be_immutable, sized_box_for_whitespace, prefer_is_empty, avoid_print, await_only_futures
-
 import 'dart:io';
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/models/product-model.dart';
@@ -20,25 +18,34 @@ import '../controllers/products-images-controller.dart';
 import '../services/generate-ids-service.dart';
 import '../widgets/dropdown-categories-widget.dart';
 
-class AddProductScreen extends StatelessWidget {
-  AddProductScreen({super.key});
+class AddProductScreen extends StatefulWidget {
+  AddProductScreen({Key? key}) : super(key: key);
 
-  AddProductImagesController addProductImagesController =
+  @override
+  _AddProductScreenState createState() => _AddProductScreenState();
+}
+
+class _AddProductScreenState extends State<AddProductScreen> {
+  final AddProductImagesController addProductImagesController =
       Get.put(AddProductImagesController());
 
-  //
-  CategoryDropDownController categoryDropDownController =
+  final CategoryDropDownController categoryDropDownController =
       Get.put(CategoryDropDownController());
 
-  IsSaleController isSaleController = Get.put(IsSaleController());
+  final IsSaleController isSaleController = Get.put(IsSaleController());
 
-  TextEditingController productNameController = TextEditingController();
-  TextEditingController salePriceController = TextEditingController();
-  TextEditingController fullPriceController = TextEditingController();
-  TextEditingController deliveryTimeController = TextEditingController();
-  TextEditingController productDescriptionController = TextEditingController();
-  TextEditingController quantityController = TextEditingController();
-  User? user = FirebaseAuth.instance.currentUser;
+  final TextEditingController productNameController = TextEditingController();
+  final TextEditingController salePriceController = TextEditingController();
+  final TextEditingController fullPriceController = TextEditingController();
+  final TextEditingController deliveryTimeController = TextEditingController();
+  final TextEditingController productDescriptionController =
+      TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  final List<String> availableSizes = ["S", "M", "L", "XL"];
+  List<String> selectedSizes = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,11 +83,11 @@ class AddProductScreen extends StatelessWidget {
                 ),
               ),
 
-              //show Images
+              // Show Images
               GetBuilder<AddProductImagesController>(
                 init: AddProductImagesController(),
                 builder: (imageController) {
-                  return imageController.selectedIamges.length > 0
+                  return imageController.selectedIamges.isNotEmpty
                       ? Container(
                           width: MediaQuery.of(context).size.width - 20,
                           height: Get.height / 3.0,
@@ -130,10 +137,10 @@ class AddProductScreen extends StatelessWidget {
                 },
               ),
 
-              //show categories drop down
+              // Show Categories Dropdown
               DropDownCategoriesWiidget(),
 
-              //isSale
+              // IsSale toggle
               GetBuilder<IsSaleController>(
                 init: IsSaleController(),
                 builder: (isSaleController) {
@@ -158,7 +165,8 @@ class AddProductScreen extends StatelessWidget {
                   );
                 },
               ),
-              //form
+
+              // Form fields
               SizedBox(height: 10.0),
               Container(
                 height: 65,
@@ -183,6 +191,7 @@ class AddProductScreen extends StatelessWidget {
               ),
               SizedBox(height: 10.0),
 
+              // Conditional Sale Price field
               Obx(() {
                 return isSaleController.isSale.value
                     ? Container(
@@ -282,7 +291,6 @@ class AddProductScreen extends StatelessWidget {
                 height: 65,
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
                 child: TextFormField(
-                  
                   cursorColor: AppConstant.colorRed,
                   textInputAction: TextInputAction.next,
                   controller: quantityController,
@@ -297,27 +305,57 @@ class AddProductScreen extends StatelessWidget {
                         Radius.circular(10.0),
                       ),
                     ),
-                    
                   ),
                 ),
               ),
 
+              // Select Sizes checkboxes
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Select Sizes"),
+                    Wrap(
+                      children: availableSizes.map((size) {
+                        return CheckboxListTile(
+                          title: Text(size),
+                          value: selectedSizes.contains(size),
+                          onChanged: (bool? value) {
+                            if (value != null) {
+                              setState(() {
+                                if (value) {
+                                  selectedSizes.add(size); // Add size if checked
+                                } else {
+                                  selectedSizes.remove(size); // Remove size if unchecked
+                                }
+                              });
+                            }
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Upload Button
               ElevatedButton(
                 onPressed: () async {
-                  // print(productId);
-
                   try {
                     EasyLoading.show();
                     await addProductImagesController.uploadFunction(
                         addProductImagesController.selectedIamges);
                     print(addProductImagesController.arrImagesUrl);
 
-                    String productId = await GenerateIds().generateProductId();
+                    String productId =
+                        await GenerateIds().generateProductId();
 
                     ProductModel productModel = ProductModel(
                       productId: productId,
-                      categoryId: categoryDropDownController.selectedCategoryId
-                          .toString(),
+                      categoryId:
+                          categoryDropDownController.selectedCategoryId
+                              .toString(),
                       productName: productNameController.text.trim(),
                       categoryName: categoryDropDownController
                           .selectedCategoryName
@@ -326,7 +364,8 @@ class AddProductScreen extends StatelessWidget {
                           ? salePriceController.text.trim()
                           : '',
                       fullPrice: fullPriceController.text.trim(),
-                      productImages: addProductImagesController.arrImagesUrl,
+                      productImages:
+                          addProductImagesController.arrImagesUrl,
                       deliveryTime: deliveryTimeController.text.trim(),
                       isSale: isSaleController.isSale.value,
                       productDescription:
@@ -335,6 +374,7 @@ class AddProductScreen extends StatelessWidget {
                       updatedAt: DateTime.now(),
                       quantity: quantityController.text.trim(),
                       email: user!.email.toString(),
+                      productSizes: selectedSizes,
                     );
 
                     await FirebaseFirestore.instance
@@ -348,9 +388,14 @@ class AddProductScreen extends StatelessWidget {
                     deliveryTimeController.clear();
                     productDescriptionController.clear();
                     EasyLoading.dismiss();
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AllProductsScreen()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllProductsScreen(),
+                      ),
+                    );
                   } catch (e) {
-                    print("error : $e");
+                    print("Error: $e");
                   }
                 },
                 child: Text("Upload"),
@@ -361,13 +406,12 @@ class AddProductScreen extends StatelessWidget {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-            // sets the background color of the `BottomNavigationBar`
-            canvasColor: AppColor().colorRed,
-            // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-            primaryColor: Colors.red,
-            textTheme: Theme.of(context)
-                .textTheme
-                .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
+          canvasColor: AppColor().colorRed,
+          primaryColor: Colors.red,
+          textTheme: Theme.of(context)
+              .textTheme
+              .copyWith(bodySmall: TextStyle(color: Colors.yellow)),
+        ),
         child: BottomNavigationBar(
           currentIndex: 0,
           selectedItemColor: Colors.red,
@@ -399,26 +443,23 @@ class AddProductScreen extends StatelessWidget {
                 );
                 break;
               case 1:
-                // Handle the Wishlist item tap
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AllProductsScreen()));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AllProductsScreen(),
+                  ),
+                );
                 break;
               case 2:
-                // Handle the Categories item tap
                 Get.offAll(AllUsersScreen());
                 break;
               case 3:
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AllCategoriesScreen()),
+                    builder: (context) => AllCategoriesScreen(),
+                  ),
                 );
-                break;
-              case 4:
-                // Handle the Profile item tap
-                // Get.offAll();
                 break;
             }
           },
