@@ -12,7 +12,7 @@ class SelectTypeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose Role', style: TextStyle(color: Colors.white)),
+        title: Center(child: Text('Choose Role', style: TextStyle(color: Colors.white))),
         backgroundColor: AppColor().colorRed,
       ),
       body: Container(

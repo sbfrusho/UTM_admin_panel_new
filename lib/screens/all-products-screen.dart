@@ -501,7 +501,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
         title: Text("All Products", style: TextStyle(color: Colors.white)),
         actions: [
           GestureDetector(
-            onTap: () => Get.to(() => AllProductsScreen()),
+            onTap: () => Get.to(() => AddProductScreen()),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Icon(Icons.add, color: Colors.white),
@@ -654,7 +654,7 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AllProductsScreen()));
                 break;
               case 2:
-                Get.offAll(SellerAllUsersScreen());
+                Get.offAll(AllUsersScreen());
                 break;
               case 3:
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AllCategoriesScreen()));

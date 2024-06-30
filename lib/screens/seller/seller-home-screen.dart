@@ -1,5 +1,7 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
-
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
 import 'package:admin_panel/screens/seller/Seller-all-product.dart';
 import 'package:admin_panel/screens/seller/profile.dart';
@@ -7,15 +9,12 @@ import 'package:admin_panel/screens/seller/seller-all-categories.dart';
 import 'package:admin_panel/screens/seller/seller-all-user.dart';
 import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all-orders-screen.dart';
 import 'package:admin_panel/widgets/drawer-widget-admin.dart';
-import 'package:get/get.dart';
 
 class SellerHomeScreen extends StatefulWidget {
   @override
@@ -24,21 +23,48 @@ class SellerHomeScreen extends StatefulWidget {
 
 class _SellerHomeScreenState extends State<SellerHomeScreen> {
   int userCount = 0;
-
   int orderCount = 0;
-
   int productCount = 0;
+  int sellerOrderCount = 0; // To keep track of the seller's orders
+
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     super.initState();
     fetchCounts();
+    fetchSellerOrderCount(); // Call the function to fetch seller order count
+  }
+
+  Future<void> fetchSellerOrderCount() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    print('Current user email: ${user?.email}');
+    
+    final sellerOrderSnapshot = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('sellerId', isEqualTo: user?.email)
+        .get();
+
+    print('Number of documents fetched: ${sellerOrderSnapshot.docs.length}');
+    print('Seller order snapshot: $sellerOrderSnapshot');
+
+    if (sellerOrderSnapshot.docs.isNotEmpty) {
+      sellerOrderSnapshot.docs.forEach((document) {
+        print('Order ID: ${document.id}, Data: ${document.data()}');
+      });
+
+      setState(() {
+        sellerOrderCount = sellerOrderSnapshot.size;
+      });
+    } else {
+      print('No orders found for seller with email: ${user?.email}');
+    }
   }
 
   Future<void> fetchCounts() async {
     final orderSnapshot = await FirebaseFirestore.instance.collection('orders').get();
     final productSnapshot = await FirebaseFirestore.instance.collection('products').get();
-
+    
     setState(() {
       orderCount = orderSnapshot.size;
       productCount = productSnapshot.size;
@@ -61,7 +87,6 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // _buildLineChart(),
             _buildInfoCard(),
             SizedBox(height: 50),
             Row(
@@ -98,121 +123,58 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-        
-        // sets the background color of the `BottomNavigationBar`
-        canvasColor: AppColor().colorRed,
-        // sets the active color of the `BottomNavigationBar` if `Brightness` is light
-        // primaryColor: Colors.red,
-        textTheme: Theme
-            .of(context)
-            .textTheme
-            .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
+          canvasColor: AppColor().colorRed,
+          textTheme: Theme.of(context).textTheme.copyWith(
+            bodySmall: TextStyle(color: Colors.yellow),
+          ),
+        ),
         child: BottomNavigationBar(
-            currentIndex: 0,
-            selectedItemColor: Colors.red,
-            unselectedItemColor: Colors.grey,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag),
-                label: 'Products',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.category),
-                label: 'Categories',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Profile',
-              ),
-            ],
-            onTap: (index) {
-              switch (index) {
-                case 0:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SellerHomeScreen()),
-                  );
-                  break;
-                case 1:
-                  // Handle the Wishlist item tap
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
-                  break;
-                case 2:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
-                  );
-                  break;
-                case 3:
-                  // Handle the Profile item tap
-                  Get.offAll(ProfileScreen());
-                  break;
-              }
-            },
-          ),
-      ),
-
-    );
-  }
-
-  Widget _buildLineChart() {
-    return Container(
-      height: 200,
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: LineChart(
-        LineChartData(
-          gridData: FlGridData(show: true),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: true),
+          currentIndex: 0,
+          selectedItemColor: Colors.red,
+          unselectedItemColor: Colors.grey,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: true),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag),
+              label: 'Products',
             ),
-          ),
-          borderData: FlBorderData(
-            show: true,
-            border: Border.all(color: Colors.black, width: 1),
-          ),
-          minX: 0,
-          maxX: 7,
-          minY: 0,
-          maxY: 6,
-          lineBarsData: [
-            LineChartBarData(
-              spots: [
-                FlSpot(0, 3),
-                FlSpot(1, 1),
-                FlSpot(2, 4),
-                FlSpot(3, 3),
-                FlSpot(4, 2),
-                FlSpot(5, 5),
-                FlSpot(6, 4),
-              ],
-              isCurved: true,
-              color: Colors.blue,
-              barWidth: 4,
-              belowBarData: BarAreaData(show: true, color: Colors.lightBlue.withOpacity(0.5),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'Categories',
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: 'Profile',
             ),
           ],
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SellerHomeScreen()),
+                );
+                break;
+              case 1:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SellerAllProductScreen()),
+                );
+                break;
+              case 2:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
+                );
+                break;
+              case 3:
+                Get.offAll(ProfileScreen());
+                break;
+            }
+          },
         ),
       ),
     );
@@ -243,6 +205,8 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
           _buildInfoRow('Orders', orderCount, Icons.list),
           SizedBox(height: 8),
           _buildInfoRow('Products', productCount, Icons.shopping_bag),
+          SizedBox(height: 8),
+          _buildInfoRow('Your Orders', sellerOrderCount, Icons.list_alt), // Display seller order count
         ],
       ),
     );

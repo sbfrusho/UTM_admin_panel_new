@@ -190,10 +190,6 @@ class SellerCategoriesScreen extends StatelessWidget {
               label: 'Products',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Users',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.category),
               label: 'Categories',
             ),
@@ -217,16 +213,13 @@ class SellerCategoriesScreen extends StatelessWidget {
                         builder: (context) => SellerAllProductScreen()));
                 break;
               case 2:
-                Get.offAll(SellerAllUsersScreen());
-                break;
-              case 3:
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => SellerCategoriesScreen()),
                 );
                 break;
-              case 4:
+              case 3:
                 // Handle the Profile item tap
                 Get.offAll(ProfileScreen());
                 break;

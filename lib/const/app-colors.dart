@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 class AppColor{
   Color colorRed = const Color.fromARGB(255, 108, 2, 1);
+  Color iconColor = const Color.fromARGB(255, 255, 255, 255);
   Color backgroundColor = const Color.fromARGB(255, 248, 246, 242);
 
   static const Gradient linerGradient = LinearGradient(

@@ -102,10 +102,6 @@ class SellerOrderItem extends StatelessWidget {
                 label: 'Products',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Users',
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
               ),
@@ -124,16 +120,12 @@ class SellerOrderItem extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => AllProductsScreen()));
                   break;
                 case 2:
-                  // Handle the Categories item tap
-                  Get.offAll(SellerAllUsersScreen());
-                  break;
-                case 3:
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
                   );
                   break;
-                case 4:
+                case 3:
                   // Handle the Profile item tap
                   // Get.offAll();
                   break;
