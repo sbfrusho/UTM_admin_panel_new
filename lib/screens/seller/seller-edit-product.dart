@@ -7,6 +7,8 @@ import 'package:admin_panel/screens/all-products-screen.dart';
 import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/all_categories_screen.dart';
 import 'package:admin_panel/screens/seller/Seller-all-product.dart'; // Make sure to import the screen
+import 'package:admin_panel/screens/seller/seller-all-categories.dart';
+import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:admin_panel/utils/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -415,10 +417,6 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                   label: 'Products',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Users',
-                ),
-                BottomNavigationBarItem(
                   icon: Icon(Icons.category),
                   label: 'Categories',
                 ),
@@ -428,22 +426,19 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                   case 0:
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AdminScreen()),
+                      MaterialPageRoute(builder: (context) => SellerHomeScreen()),
                     );
                     break;
                   case 1:
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AllProductsScreen()),
+                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()),
                     );
-                    break;
-                  case 2:
-                    Get.offAll(AllUsersScreen());
                     break;
                   case 3:
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AllCategoriesScreen()),
+                      MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
                     );
                     break;
                 }

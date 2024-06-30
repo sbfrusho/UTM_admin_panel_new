@@ -453,6 +453,7 @@ import 'package:admin_panel/screens/seller/profile.dart';
 import 'package:admin_panel/screens/seller/seller-add-product.dart';
 import 'package:admin_panel/screens/seller/seller-all-categories.dart';
 import 'package:admin_panel/screens/seller/seller-all-user.dart';
+import 'package:admin_panel/screens/seller/seller-edit-product.dart';
 import 'package:admin_panel/screens/seller/seller-home-screen.dart';
 import 'package:admin_panel/screens/user-details-screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -602,7 +603,7 @@ class _SellerAllProductScreenState extends State<SellerAllProductScreen> {
                         final isSaleController = Get.put(IsSaleController());
                         editProdouctCategory.setOldValue(productModel.categoryId);
                         isSaleController.setIsSaleOldValue(productModel.isSale);
-                        Get.to(() => EditProductScreen(productModel: productModel));
+                        Get.to(() => SellerEditProductScreen(productModel: productModel));
                       },
                       child: Icon(Icons.edit),
                     ),
@@ -632,10 +633,6 @@ class _SellerAllProductScreenState extends State<SellerAllProductScreen> {
               label: 'Products',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Users',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.category),
               label: 'Categories',
             ),
@@ -653,12 +650,9 @@ class _SellerAllProductScreenState extends State<SellerAllProductScreen> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
                 break;
               case 2:
-                Get.offAll(SellerAllUsersScreen());
-                break;
-              case 3:
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SellerCategoriesScreen()));
                 break;
-              case 4:
+              case 3:
                 Get.offAll(ProfileScreen());
                 break;
             }

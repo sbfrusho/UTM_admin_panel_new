@@ -121,10 +121,6 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                 label: 'Products',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Users',
-              ),
-              BottomNavigationBarItem(
                 icon: Icon(Icons.category),
                 label: 'Categories',
               ),
@@ -147,16 +143,12 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
                       MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
                   break;
                 case 2:
-                  // Handle the Categories item tap
-                  Get.offAll(SellerAllUsersScreen());
-                  break;
-                case 3:
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
                   );
                   break;
-                case 4:
+                case 3:
                   // Handle the Profile item tap
                   Get.offAll(ProfileScreen());
                   break;

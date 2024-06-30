@@ -1,22 +1,22 @@
 import 'dart:io';
 
-import 'package:admin_panel/screens/seller/profile.dart';
+import 'package:admin_panel/screens/admin-screen.dart';
+import 'package:admin_panel/screens/all-products-screen.dart';
+import 'package:admin_panel/screens/all-users-screen.dart';
+import 'package:admin_panel/screens/all_categories_screen.dart';
+import 'package:admin_panel/screens/seller/Seller-all-product.dart';
 import 'package:admin_panel/screens/seller/seller-all-categories.dart';
-import 'package:admin_panel/screens/seller/seller-all-product.dart';
-import 'package:admin_panel/screens/seller/seller-all-user.dart';
 import 'package:admin_panel/screens/seller/seller-home-screen.dart';
-import 'package:admin_panel/screens/seller/seller-order-item.dart';
+import 'package:admin_panel/screens/single-order-items.dart';
 import 'package:admin_panel/utils/AppConstant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
-
 import '../../const/app-colors.dart';
+import '../../models/order-model-2.dart';
 
 class SellerAllOrderScreen extends StatefulWidget {
   const SellerAllOrderScreen({Key? key}) : super(key: key);
@@ -28,8 +28,7 @@ class SellerAllOrderScreen extends StatefulWidget {
 class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
   late Future<QuerySnapshot> _ordersFuture;
   String _selectedStatus = 'All';
-  final List<String> _statusOptions = ['All', 'accepted', 'declined', 'in progress'];
-  User? sellerId = FirebaseAuth.instance.currentUser;
+  final List<String> _statusOptions = ['All', 'accepted', 'declined','in progress'];
 
   @override
   void initState() {
@@ -42,13 +41,11 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
       if (status == 'All') {
         return await FirebaseFirestore.instance
             .collection('orders')
-            .where('sellerId', isEqualTo: sellerId!.email)
             .orderBy('createdAt', descending: true)
             .get();
       } else {
         return await FirebaseFirestore.instance
             .collection('orders')
-            .where('sellerId', isEqualTo: sellerId!.email)
             .where('status', isEqualTo: status)
             .orderBy('createdAt', descending: true)
             .get();
@@ -83,7 +80,7 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Get.offAll(SellerHomeScreen());
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SellerHomeScreen()));
           },
         ),
         title: Text(
@@ -92,8 +89,9 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
         ),
         backgroundColor: AppColor().colorRed,
         actions: [
+
           IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
+            icon: Icon(Icons.search , color: Colors.white,),
             onPressed: () {
               showModalBottomSheet(
                 context: context,
@@ -141,6 +139,17 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
               );
             },
           ),
+          // IconButton(
+          //   // icon: Icon(Icons.print , color: Colors.white,),
+          //   onPressed: () async {
+          //     try {
+          //       await _downloadProductsListAsPdf(context);
+          //     } catch (e) {
+          //       print('Error downloading product list: $e');
+          //       _showErrorDialog(context, 'Error downloading product list: $e');
+          //     }
+          //   },
+          // ),
         ],
       ),
       body: Container(
@@ -150,18 +159,24 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               print('Snapshot error: ${snapshot.error}');
-              return Center(
-                child: Text('Error occurred while fetching orders! ${sellerId!.email}'),
+              return Container(
+                child: Center(
+                  child: Text('Error occurred while fetching orders!'),
+                ),
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CupertinoActivityIndicator(),
+              return Container(
+                child: Center(
+                  child: CupertinoActivityIndicator(),
+                ),
               );
             }
             if (snapshot.data!.docs.isEmpty) {
-              return Center(
-                child: Text('No orders found!'),
+              return Container(
+                child: Center(
+                  child: Text('No orders found!'),
+                ),
               );
             }
 
@@ -175,7 +190,7 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                 return Card(
                   elevation: 5,
                   child: ListTile(
-                    onTap: () => Get.offAll(SellerOrderItem(orderId: data.id)),
+                    onTap: () => Get.offAll(OrderItemsScreen(orderId: data.id)),
                     leading: CircleAvatar(
                       backgroundColor: AppConstant.colorRed,
                       child: Text(data['customerName'][0]),
@@ -217,7 +232,7 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order accepted'),
+                                              content: Text('Order accepted '),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -237,10 +252,11 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.orange,
+                                        backgroundColor:  Colors.orange,
+                                        
                                       ),
                                       onPressed: () async {
-                                        // Update the status in the "orders" collection to "declined"
+                                        // Update the status in the "orders" collection to "accepted"
                                         try {
                                           await FirebaseFirestore.instance
                                               .collection('orders')
@@ -249,7 +265,7 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                                           // Show a success message
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Order declined'),
+                                              content: Text('Order declined '),
                                             ),
                                           );
                                           // Reload the orders after updating the status
@@ -260,7 +276,7 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                                           // Show an error message if updating the status fails
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Failed to decline order: $e'),
+                                              content: Text('Failed to accept order: $e'),
                                             ),
                                           );
                                         }
@@ -272,7 +288,7 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                                         backgroundColor: Colors.red[200],
                                       ),
                                       onPressed: () async {
-                                        // Update the status in the "orders" collection to "in progress"
+                                        // Update the status in the "orders" collection to "accepted"
                                         try {
                                           await FirebaseFirestore.instance
                                               .collection('orders')
@@ -292,56 +308,52 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
                                           // Show an error message if updating the status fails
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text('Failed to update order: $e'),
+                                              content: Text('Failed to accept order: $e'),
                                             ),
                                           );
                                         }
                                       },
                                       child: Text('In progress'),
                                     ),
+                                    // ElevatedButton(
+                                    //   style: ElevatedButton.styleFrom(
+                                    //     backgroundColor: Colors.red[200],
+                                    //   ),
+                                    //   onPressed: () async {
+                                    //     try {
+                                    //       // Delete the order document from Firestore
+                                    //       await FirebaseFirestore.instance
+                                    //           .collection('orders')
+                                    //           .doc(data.id)
+                                    //           .delete();
+
+                                    //       // Show a success message
+                                    //       ScaffoldMessenger.of(context).showSnackBar(
+                                    //         SnackBar(
+                                    //           content: Text('Order rejected '),
+                                    //         ),
+                                    //       );
+
+                                    //       // Reload the orders after deleting the order
+                                    //       setState(() {
+                                    //         _ordersFuture = _fetchOrders(status: _selectedStatus);
+                                    //       });
+                                    //     } catch (e) {
+                                    //       // Show an error message if deleting the order fails
+                                    //       ScaffoldMessenger.of(context).showSnackBar(
+                                    //         SnackBar(
+                                    //           content: Text('Failed to reject order: $e'),
+                                    //         ),
+                                    //       );
+                                    //     }
+                                    //   },
+                                    //   child: Text('Reject'),
+                                    // ),
                                   ],
                                 ),
                               ],
                             ),
                           ],
-                        ),
-                      ],
-                    ),
-                    trailing: Column(
-                      children: [
-                        Text(data['createdAt'] != null
-                            ? (data['createdAt'] as Timestamp).toDate().toString()
-                            : 'No date'),
-                        IconButton(
-                          icon: Icon(Icons.download),
-                          onPressed: () async {
-                            final pdf = pw.Document();
-                            pdf.addPage(
-                              pw.Page(
-                                build: (pw.Context context) => pw.Center(
-                                  child: pw.Text('Order Details'),
-                                ),
-                              ),
-                            );
-
-                            final directory = await getExternalStorageDirectory();
-                            final status = await Permission.storage.request();
-                            if (status.isGranted) {
-                              final file = File('${directory?.path}/order_${data.id}.pdf');
-                              await file.writeAsBytes(await pdf.save());
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('PDF downloaded'),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Permission denied'),
-                                ),
-                              );
-                            }
-                          },
                         ),
                       ],
                     ),
@@ -352,62 +364,182 @@ class _SellerAllOrderScreenState extends State<SellerAllOrderScreen> {
           },
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: AppColor().colorRed,
-        unselectedItemColor: Colors.black,
-        selectedFontSize: 14,
-        unselectedFontSize: 14,
-        onTap: (value) {
-          switch (value) {
-            case 0:
-              Get.offAll(SellerHomeScreen());
-              break;
-            case 1:
-              Get.offAll(SellerAllProductScreen());
-              break;
-            case 2:
-              Get.offAll(SellerAllOrderScreen());
-              break;
-            case 3:
-              Get.offAll(SellerCategoriesScreen());
-              break;
-            case 4:
-              Get.offAll(SellerAllUsersScreen());
-              break;
-            case 5:
-              Get.offAll(ProfileScreen());
-              break;
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+        // sets the background color of the `BottomNavigationBar`
+        canvasColor: AppColor().colorRed,
+        // sets the active color of the `BottomNavigationBar` if `Brightness` is light
+        primaryColor: Colors.red,
+        textTheme: Theme
+            .of(context)
+            .textTheme
+            .copyWith(bodySmall: TextStyle(color: Colors.yellow))),
+        child: BottomNavigationBar(
+            currentIndex: 0,
+            selectedItemColor: Colors.red,
+            unselectedItemColor: Colors.grey,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_bag),
+                label: 'Products',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Users',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.category),
+                label: 'Categories',
+              ),
+            ],
+            onTap: (index) {
+              switch (index) {
+                case 0:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SellerHomeScreen()),
+                  );
+                  break;
+                case 1:
+                  // Handle the Wishlist item tap
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SellerAllProductScreen()));
+                  break;
+                case 2:
+                  // Handle the Categories item tap
+                  // Get.offAll(Seller());
+                  break;
+                case 3:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SellerCategoriesScreen()),
+                  );
+                  break;
+                case 4:
+                  // Handle the Profile item tap
+                  // Get.offAll();
+                  break;
+              }
+            },
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Product',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: 'Order',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Categories',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.verified_user),
-            label: 'Users',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }
+
+Future<void> _downloadProductsListAsPdf(BuildContext context) async {
+  try {
+    // Request storage permissions
+    if (!await _requestPermissions()) {
+      throw Exception('Storage permissions not granted');
+    }
+
+    final querySnapshot = await FirebaseFirestore.instance.collection('orders').get();
+    final orders = querySnapshot.docs.map((doc) => OrderModel2.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+    // Create a PDF document
+    final pdf = pw.Document();
+
+    // Add a page to the PDF
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              var order = orders[index];
+              return pw.Padding(
+                padding: const pw.EdgeInsets.all(10),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Customer Name: ${order.customerName}'),
+                    pw.Text('Customer Phone: ${order.customerPhone}'),
+                    pw.Text('Customer Address: ${order.customerAddress}'),
+                    pw.Text('Payment Method: ${order.paymentMethod}'),
+                    pw.Text('Delivery Time: ${order.deliveryTime}'),
+                    pw.Text('Total Price: ${order.totalPrice}'),
+                    pw.Text('Status: ${order.status}'),
+                    pw.Text('Created At: ${order.createdAt}'),
+                    pw.Text('Unique ID: ${order.uniqueId}'),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+
+    // Get the directory to save the file
+    final directory = Directory('/storage/emulated/0/Download');
+    if (!await directory.exists()) {
+      await directory.create(recursive: true);
+    }
+    final path = '${directory.path}/orders.pdf';
+    final file = File(path);
+
+    // Write the PDF data to the file
+    await file.writeAsBytes(await pdf.save());
+
+    print("This is the path file: $file");
+
+    // Show a confirmation dialog
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Download Complete'),
+          content: Text('The product list has been saved to $path'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (e) {
+    print('Error during downloading process: $e');
+    _showErrorDialog(context, 'Failed to download product list: $e');
+  }
 }
+
+Future<bool> _requestPermissions() async {
+  final status = await Permission.storage.request();
+  if (status.isGranted) {
+    return true;
+  } else {
+    // Open app settings if permission is permanently denied
+    if (await Permission.storage.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+    return false;
+  }
+}
+
+void _showErrorDialog(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}}
