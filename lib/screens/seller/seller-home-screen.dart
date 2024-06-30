@@ -1,20 +1,15 @@
+// ignore_for_file: avoid_print, prefer_const_constructors, avoid_function_literals_in_foreach_calls, file_names
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:admin_panel/screens/all_categories_screen.dart';
 import 'package:admin_panel/screens/seller/Seller-all-product.dart';
 import 'package:admin_panel/screens/seller/profile.dart';
 import 'package:admin_panel/screens/seller/seller-all-categories.dart';
-import 'package:admin_panel/screens/seller/seller-all-user.dart';
 import 'package:admin_panel/screens/seller/seller-order.dart';
 import 'package:admin_panel/widgets/drawer-widget.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:admin_panel/const/app-colors.dart';
-import 'package:admin_panel/screens/all-products-screen.dart';
-import 'package:admin_panel/screens/all-users-screen.dart';
-import 'package:admin_panel/screens/all-orders-screen.dart';
-import 'package:admin_panel/widgets/drawer-widget-admin.dart';
 
 class SellerHomeScreen extends StatefulWidget {
   @override
@@ -26,6 +21,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
   int orderCount = 0;
   int productCount = 0;
   int sellerOrderCount = 0; // To keep track of the seller's orders
+  int sellerProductCount = 0; // To keep track of the seller's products
 
   User? user = FirebaseAuth.instance.currentUser;
 
@@ -34,6 +30,7 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
     super.initState();
     fetchCounts();
     fetchSellerOrderCount(); // Call the function to fetch seller order count
+    fetchSellerProductCount(); // Call the function to fetch seller product count
   }
 
   Future<void> fetchSellerOrderCount() async {
@@ -58,6 +55,27 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
       });
     } else {
       print('No orders found for seller with email: ${user?.email}');
+    }
+  }
+
+  Future<void> fetchSellerProductCount() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    print('Current user email: ${user?.email}');
+    
+    final sellerProductSnapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('email', isEqualTo: user?.email)
+        .get();
+
+    print('Number of products fetched: ${sellerProductSnapshot.docs.length}');
+    print('Seller product snapshot: $sellerProductSnapshot');
+
+    if (sellerProductSnapshot.docs.isNotEmpty) {
+      setState(() {
+        sellerProductCount = sellerProductSnapshot.size;
+      });
+    } else {
+      print('No products found for seller with email: ${user?.email}');
     }
   }
 
@@ -201,12 +219,14 @@ class _SellerHomeScreenState extends State<SellerHomeScreen> {
             'Information',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 8),
-          _buildInfoRow('Orders', orderCount, Icons.list),
-          SizedBox(height: 8),
-          _buildInfoRow('Products', productCount, Icons.shopping_bag),
+          // SizedBox(height: 8),
+          // _buildInfoRow('Orders', orderCount, Icons.list),
+          // SizedBox(height: 8),
+          // _buildInfoRow('Products', productCount, Icons.shopping_bag),
           SizedBox(height: 8),
           _buildInfoRow('Your Orders', sellerOrderCount, Icons.list_alt), // Display seller order count
+          SizedBox(height: 8),
+          _buildInfoRow('Your Products', sellerProductCount, Icons.shopping_bag), // Display seller product count
         ],
       ),
     );
