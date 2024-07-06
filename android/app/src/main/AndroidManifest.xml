@@ -10,7 +10,7 @@
     <!-- Android Permissions-->
     
     <application
-        android:label="admin_panel"
+        android:label="UTM E-ALUMNI ADMIN PANEL"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">

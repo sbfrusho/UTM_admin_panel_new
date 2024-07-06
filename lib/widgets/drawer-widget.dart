@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, sort_child_properties_last, prefer_const_constructors, unused_local_variable, must_be_immutable, avoid_print, unnecessary_string_interpolations, deprecated_member_use, unused_element, unnecessary_null_comparison
 import 'package:admin_panel/const/app-colors.dart';
-import 'package:admin_panel/screens/all-users-screen.dart';
 import 'package:admin_panel/screens/select-type.dart';
 import 'package:admin_panel/screens/seller/Seller-all-product.dart';
 import 'package:admin_panel/screens/seller/seller-all-categories.dart';
