@@ -341,14 +341,13 @@ class _SellerEditProductScreenState extends State<SellerEditProductScreen> {
                                 selected: selectedSizes.contains(size),
                                 label: Text(size),
                                 onSelected: (bool selected) {
-                                  // setState(() {
-                                  //   if (selected) {
-                                  //     selectedSizes.add(size);
-                                  //   } else {
-                                  //     selectedSizes.remove(size);
-                                  //   }
-                                  // });
-                                  print('Selected Sizes: $selectedSizes');
+                                  setState(() {
+                                    if (selected) {
+                                      selectedSizes.add(size);
+                                    } else {
+                                      selectedSizes.remove(size);
+                                    }
+                                  });
                                 },
                               );
                             }).toList(),

@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, must_be_immutable, avoid_unnecessary_containers, prefer_const_constructors, sized_box_for_whitespace, unused_import
-
 import 'dart:io';
 import 'package:admin_panel/const/app-colors.dart';
 import 'package:admin_panel/controllers/edit-product-controller.dart';
@@ -39,10 +37,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final TextEditingController productDescriptionController =
       TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  List<String> productSizes = [];
+  List<String> selectedSizes = [];
   final User? user = FirebaseAuth.instance.currentUser;
   List<String> availableSizes = ["S", "M", "L", "XL"];
-  List<String> selectedSizes = [];
 
   @override
   void initState() {
@@ -54,12 +51,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
     productDescriptionController.text = widget.productModel.productDescription;
     quantityController.text = widget.productModel.quantity;
     selectedSizes = widget.productModel.productSizes;
-  }
-
-  void updateProductSizes(List<String> sizes) {
-    setState(() {
-      productSizes = sizes;
-    });
   }
 
   @override
@@ -425,7 +416,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         updatedAt: DateTime.now(),
                         quantity: quantityController.text.trim(),
                         email: user!.email.toString(),
-                        productSizes: productSizes,
+                        productSizes: selectedSizes,
                       );
 
                       await FirebaseFirestore.instance
