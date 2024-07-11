@@ -74,6 +74,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 Navigator.pop(context);
               },
             ),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                onPressed: () async {
+                  await _deleteProduct();
+                },
+              ),
+            ],
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -500,4 +511,36 @@ class _EditProductScreenState extends State<EditProductScreen> {
       },
     );
   }
+  Future<void> _deleteProduct() async {
+  EasyLoading.show();
+  try {
+    // Fetch all orders
+    QuerySnapshot orderSnapshot = await FirebaseFirestore.instance.collection('orders').get();
+
+    for (QueryDocumentSnapshot orderDoc in orderSnapshot.docs) {
+      // Fetch all items in the order
+      QuerySnapshot itemsSnapshot = await orderDoc.reference.collection('items').get();
+
+      for (QueryDocumentSnapshot itemDoc in itemsSnapshot.docs) {
+        // Check if the item is the product to be deleted
+        if (itemDoc['product_id'] == widget.productModel.productId) {
+          // Delete the item from the subcollection
+          await itemDoc.reference.delete();
+        }
+      }
+    }
+
+    // Delete the product from the products collection
+    await FirebaseFirestore.instance.collection('products').doc(widget.productModel.productId).delete();
+
+    EasyLoading.dismiss();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AllProductsScreen()),
+    );
+  } catch (e) {
+    EasyLoading.dismiss();
+    Get.snackbar('Error', 'Failed to delete product: $e', snackPosition: SnackPosition.BOTTOM);
+  }
+}
 }
